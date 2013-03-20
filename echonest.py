@@ -1,24 +1,13 @@
-<<<<<<< HEAD
 #! /usr/bin/python
-
-from pyechonest import config, song
-
-config.ECHO_NEST_API_KEY="YNBJILDXWEZ6LGWLG"
-
-#Returns a song's audio features, including:
-#mode, tempo, key, duration, time signature, loudness, danceability, energy
-#Returns the dictionary of song attributes, or an empty dictionary if there was an error
-=======
 
 import time
 from pyechonest import config, song, artist
 
-config.ECHO_NEST_API_KEY="OPKH9VHPDR0RT0GN3"
+config.ECHO_NEST_API_KEY="YNBJILDXWEZ6LGWLG"
 
 ## Returns a song's audio features, including:
 ## mode, tempo, key, duration, time signature, loudness, danceability, energy
 ## Returns the dictionary of song attributes, or an empty dictionary if there was an error
->>>>>>> Added a module to Brian's code that reads the xml library, uses his
 def get_features(songArtist = '', songTitle = ''):
 
     if songArtist == '' or songTitle == '':
@@ -35,8 +24,6 @@ def get_features(songArtist = '', songTitle = ''):
             return desiredSong.audio_summary
 
     return {}
-<<<<<<< HEAD
-=======
 
 def read_song():
     infile = open('Library.xml')
@@ -81,6 +68,4 @@ def read_song():
             time.sleep(60)
             counter = 0
 
-read_song()
-
->>>>>>> Added a module to Brian's code that reads the xml library, uses his
+#read_song()
