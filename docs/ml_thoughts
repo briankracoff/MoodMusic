@@ -1,3 +1,6 @@
+
+http://scikit-learn.org/stable/user_guide.html
+
 LabelSpreading -- semi supervised learning alg, take in 
 many classified and unclassified examples
 (more robust to noise than LabelPropagation)
