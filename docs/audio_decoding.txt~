@@ -1,0 +1,34 @@
+Findings about audio decoding in python:
+
+Table of Contents:
+  1. VLC
+  
+
+============== VLC
+VLC has a python binding available at : http://wiki.videolan.org/PythonBinding
+
+=== Requirments
+VLC : Cross platform (most people have it / easy to install)
+
+=== Description of features
+I read the source file briefly and I didn't find anything that would return the decoded data from a file.
+But it can be used to convert files to a temporary wav format (not good performance wise). Also a great thing
+that can help us is that this module will let you create your own media player based on the functionality of
+VLC, there are examples for GTK, QT and WX. check them out.
+
+=== Things we can get from it
+A nice GUI based on VLC for playing files. there are playlist and media source support in the code.
+??? Decoding functionality for audio file - Not sure yet
+
+=== Links
+http://wiki.videolan.org/PythonBinding
+
+
+
+============== PyFFmpeg
+FFmpeg is well known library for audio encoding/decoding. and is one of main tools in Linux
+to play audio. it has a great CLI but as it turns out pyFFmpeg provide bindings for the library
+in python.
+
+=== Requirments
+FFmpeg
