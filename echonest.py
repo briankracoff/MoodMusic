@@ -1,9 +1,11 @@
 #! /usr/bin/python
 
-import time
-from pyechonest import config, song, artist
+import myconfig
 
-config.ECHO_NEST_API_KEY="YNBJILDXWEZ6LGWLG"
+import time
+from  pyechonest import song, config
+
+config.ECHO_NEST_API_KEY=myconfig.mykey
 
 ## Returns a song's audio features, including:
 ## mode, tempo, key, duration, time signature, loudness, danceability, energy
@@ -36,21 +38,45 @@ def read_song():
         if line.find('<key>Name</key>') != -1:
             counter += 1
 
-            start = line.index('Name') + 18
-            end = line.index('</string>')
-            songtitle = line[start:end]
-
+            title = line[26:line.index('</string>')]
+            if title.find('&') != -1:
+                title = title.replace('#38;', '')
+            outfile.write(title)
+            outfile.write("\t")
             line = infile.readline()
-            songartist = line[28:line.index('</string>')]
-
-            outfile.write(songartist)
+            
+            artist = line[28:line.index('</string>')]
+            if artist.find('&') != -1:
+                artist = artist.replace('#38;','')
+            outfile.write(artist)
             outfile.write("\t")
+            line = infile.readline()
 
-            outfile.write(songtitle)
+            while line.find('</dict>') == -1:
+                if line.find('<key>Album</key>') != -1:
+                    album = line[27:line.index('</string>')]
+                    if album.find('&') != -1:
+                        album = album.replace('#38;','')
+                    outfile.write(album)
+                    line = infile.readline()
+                
+                if line.find('<key>Genre</key>') != -1:
+                    outfile.write("\t")
+                    genre = line[27:line.index('</string>')]
+                    if genre.find('&') != -1:
+                        genre = genre.replace('#38;','')
+                    outfile.write(genre)
+                    outfile.write("\t")
+                
+                if line.find('<key>Year</key>') != -1:
+                    year = line[27:line.index('</integer>')]
+                    outfile.write(year)
+
+                line = infile.readline()
             outfile.write("\t")
+            
 
-            feats = get_features(songartist, songtitle)
- #           print(feats)
+            feats = get_features(artist, title)
             
             outfile.write(str(feats))
             outfile.write("\t")
@@ -60,12 +86,16 @@ def read_song():
                     outfile.write(str(v)) 
                     outfile.write("\t")
             outfile.write("\n")
-            #time.sleep(.8)
                 
         line = infile.readline()
         
-        if counter == 60:
+        
+        if counter == 50:
             time.sleep(60)
             counter = 0
 
-#read_song()
+read_song()
+
+
+
+
