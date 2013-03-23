@@ -6,8 +6,6 @@ from ctypes.util import find_library
 import os
 import sys
 from collections import OrderedDict
-
-# Used by EventManager in override.py
 from inspect import getargspec
 
 try:
@@ -111,6 +109,7 @@ class CLI:
         print('Added song to \'%s\'' % chosenMood)
 
 
+    #Called in separate thread when song ends
     def end_callback(self, event):
         print("End of song. Please type a new command (\'>\' for next song in playlist or \'n\' to enter a new song")
 
@@ -130,6 +129,7 @@ class CLI:
     def play_song(self, filePath):
         song = CLI.get_song(filePath)
 
+        #Creates instance if it doesn't exist
         if not hasattr(self, 'instance'):
             self.instance = Instance("--sub-source marq")
 
@@ -139,16 +139,15 @@ class CLI:
             print('NameError: %s (%s vs LibVLC %s)' % (sys.exc_info()[1], __version__, libvlc_get_version()))
             sys.exit(1)
 
+        #Creates instance if it doesn't exist
         if not hasattr(self, 'player'):
             self.player = self.instance.media_player_new()
 
+        #Starts playing media
         self.player.set_media(media)
         self.player.play()
 
-        # Some event manager examples.  Note, the callback can be any Python
-        # callable and does not need to be decorated.  Optionally, specify
-        # any number of positional and/or keyword arguments to be passed
-        # to the callback (in addition to the first one, an Event instance).
+        #Event callbacks for end of song and for getting the position of the song
         event_manager = self.player.event_manager()
         event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
         event_manager.event_attach(EventType.MediaPlayerPositionChanged, self.pos_callback)
@@ -164,6 +163,8 @@ class CLI:
         self.keybindings.setdefault('q', self.quit_app)
         self.keybindings.setdefault('?', self.print_menu)
 
+        #Main loop of program
+        #Continues until user quits
         print('Press q to quit, ? to see menu.%s' % os.linesep)
         while True:
             k = getch()
@@ -174,7 +175,8 @@ class CLI:
                 # jump to fraction of the song.
                 self.jump_to_position(k)
 
-def getch():  # getchar(), getc(stdin)  #PYCHOK flake
+#Listens for a 1 character input from the user
+def getch():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
     try:
