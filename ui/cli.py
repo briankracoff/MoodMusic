@@ -3,7 +3,7 @@
 # A command-line interface using vlc's engine
 # To use, create a new CLI object and use cliObject.play_song(fileName)
 
-from vlc import *
+from libraries.vlc import *
 import ctypes
 from ctypes.util import find_library
 import os

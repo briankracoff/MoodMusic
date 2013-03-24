@@ -2,8 +2,8 @@
 # A simple test class for cli.py
 # Usage: ./test_cli.py path/to/song.mp3
 
-from cli import *
-from song import Song
+from ui.cli import *
+from song.song import Song
 
 def run(songPath):
     
@@ -18,3 +18,4 @@ if __name__ == '__main__':
     else:
         print('Usage: %s <song_filename>' % sys.argv[0])
         print('Once launched, type ? for the menu.\n')
+        

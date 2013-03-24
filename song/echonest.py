@@ -16,7 +16,7 @@ def get_features(songArtist = '', songTitle = ''):
         return {};
 
     #Searches for the song in pyechonest
-    song_results = song.search(artist=songArtist, title=songTitle)
+    song_results = pyechonest.song.search(artist=songArtist, title=songTitle)
 
     if len(song_results) > 0:
         desiredSong = song_results[0]
