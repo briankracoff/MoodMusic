@@ -3,9 +3,9 @@
 import myconfig
 
 import time
-from  pyechonest import song, config
+from pyechonest import song, config
 
-config.ECHO_NEST_API_KEY=myconfig.mykey
+config.ECHO_NEST_API_KEY=myconfig.ECHO_NEST_API_KEY
 
 ## Returns a song's audio features, including:
 ## mode, tempo, key, duration, time signature, loudness, danceability, energy
@@ -16,7 +16,7 @@ def get_features(songArtist = '', songTitle = ''):
         return {};
 
     #Searches for the song in pyechonest
-    song_results = pyechonest.song.search(artist=songArtist, title=songTitle)
+    song_results = song.search(artist=songArtist, title=songTitle)
 
     if len(song_results) > 0:
         desiredSong = song_results[0]
@@ -93,9 +93,3 @@ def read_song():
         if counter == 50:
             time.sleep(60)
             counter = 0
-
-read_song()
-
-
-
-

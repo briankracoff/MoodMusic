@@ -3,13 +3,10 @@ MoodMusic
 
 Playlist generator in Python
 
+Usage:
 
-To run echonest.py, you must acquire an API key from EchoNest.
-
-To use the key, create a file in the MoodMusic directory called myconfig.py and paste the following into the file, 
-substituting your own API key where it says (insert_your_API_key_here):
-
-mykey = "(insert_your_API_key_here)"
-
+1. Acquire an API key from EchoNest.
+2. Enter key in myconfig_sample.py
+3. Rename myconfig_sample.py to config.py
 
 
