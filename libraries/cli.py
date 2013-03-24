@@ -1,4 +1,7 @@
 #! /usr/bin/python
+#
+# A command-line interface using vlc's engine
+# To use, create a new CLI object and use cliObject.play_song(fileName)
 
 from vlc import *
 import ctypes
@@ -17,6 +20,24 @@ except ImportError:
 class CLI:
     def __init__(self):
         self.echo_position = False
+        self.instance = Instance("--sub-source marq")
+        self.player = self.instance.media_player_new()
+
+        #Event callbacks for end of song and for getting the position of the song
+        event_manager = self.player.event_manager()
+        event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
+        event_manager.event_attach(EventType.MediaPlayerPositionChanged, self.pos_callback)
+
+        #Constant keybindings for menu
+        self.keybindings = OrderedDict()
+        self.keybindings.setdefault(' ', self.player.pause)
+        self.keybindings.setdefault('m', self.add_to_mood)
+        self.keybindings.setdefault('i', self.print_info)
+        self.keybindings.setdefault('p', self.toggle_echo_position)
+        self.keybindings.setdefault('n', self.play_different_track)
+        self.keybindings.setdefault('>', self.next_track)
+        self.keybindings.setdefault('q', self.quit_app)
+        self.keybindings.setdefault('?', self.print_menu)
 
     def pos_callback(self, event):
         if self.echo_position:
@@ -40,7 +61,7 @@ class CLI:
         for k, m in self.keybindings.items():
             if(k != '?'):
                 m = (m.__doc__ or m.__name__).splitlines()[0]
-                print('  %s: %s.' % (k, m.rstrip('.')))
+                print('  %s -> %s.' % (k, m.rstrip('.')))
         print('0-9: go to that fraction of the movie')
 
     #Toggles whether the current position of the song should be shown
@@ -68,11 +89,8 @@ class CLI:
     def add_to_mood(self):
         """Add track to one of your moods"""
 
-        #TODO: replace this with dynamic data from db
-        songMoods = ['Happy']
-
         print('Moods that song is a part of:\n')
-        for mood in songMoods:
+        for mood in self.song.get_moods():
             print('  %s' % mood)
 
         #TODO: replace this with dynamic data from db
@@ -89,7 +107,7 @@ class CLI:
         if moodIndex == 'n':
             #Create new mood and add song to it
             chosenMood = raw_input('Enter new mood name: ')
-            #TODO: create mood in db
+            #TODO: create new mood in db
         else:
             try:
                 moodIndex = int(float(moodIndex))
@@ -106,6 +124,7 @@ class CLI:
                 #Add song to one of the current moods
                 chosenMood = moods[moodIndex]
 
+        self.song.add_mood(chosenMood)
         print('Added song to \'%s\'' % chosenMood)
 
 
@@ -117,55 +136,26 @@ class CLI:
         """Stop and exit"""
         sys.exit(0)
 
-    @staticmethod
-    #Returns the song based on the given filepath
-    def get_song(filePath):
-        song = os.path.expanduser(filePath)
-        if not os.access(song, os.R_OK):
-            print('Error: %s file not readable' % song)
-            sys.exit(1)
-        return song
-
-    def play_song(self, filePath):
-        song = CLI.get_song(filePath)
-
-        #Creates instance if it doesn't exist
-        if not hasattr(self, 'instance'):
-            self.instance = Instance("--sub-source marq")
+    def play_song(self, song):
+        self.song = song
 
         try:
-            media = self.instance.media_new(song)
+            media = self.instance.media_new(song.file)
         except NameError:
             print('NameError: %s (%s vs LibVLC %s)' % (sys.exc_info()[1], __version__, libvlc_get_version()))
             sys.exit(1)
-
-        #Creates instance if it doesn't exist
-        if not hasattr(self, 'player'):
-            self.player = self.instance.media_player_new()
 
         #Starts playing media
         self.player.set_media(media)
         self.player.play()
 
-        #Event callbacks for end of song and for getting the position of the song
-        event_manager = self.player.event_manager()
-        event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
-        event_manager.event_attach(EventType.MediaPlayerPositionChanged, self.pos_callback)
+        print('***********************')
+        print('Now playing: %s' % bytes_to_str(media.get_mrl()))
+        print('Moods: %s' % song.get_moods())
+        print('Press q to quit, ? to see menu.')
+        print('***********************')
 
-        #Constant keybindings for menu
-        self.keybindings = OrderedDict()
-        self.keybindings.setdefault(' ', self.player.pause)
-        self.keybindings.setdefault('m', self.add_to_mood)
-        self.keybindings.setdefault('i', self.print_info)
-        self.keybindings.setdefault('p', self.toggle_echo_position)
-        self.keybindings.setdefault('n', self.play_different_track)
-        self.keybindings.setdefault('>', self.next_track)
-        self.keybindings.setdefault('q', self.quit_app)
-        self.keybindings.setdefault('?', self.print_menu)
-
-        #Main loop of program
-        #Continues until user quits
-        print('Press q to quit, ? to see menu.%s' % os.linesep)
+        #Main loop of program, continues until user quits
         while True:
             k = getch()
             print('> %s' % k)

@@ -1,11 +1,15 @@
 #! /usr/bin/python
+# A simple test class for cli.py
+# Usage: ./test_cli.py path/to/song.mp3
 
 from cli import *
+from song import Song
 
 def run(songPath):
     
     myCLI = CLI()
-    myCLI.play_song(songPath)
+    mySong = Song(songPath)
+    myCLI.play_song(mySong)
 
 if __name__ == '__main__':
     if sys.argv[1:] and sys.argv[1] not in ('-h', '--help'):
