@@ -52,6 +52,11 @@ class CLI:
             print('Media: %s' % bytes_to_str(media.get_mrl()))
             print('Current time: %s/%s' % (self.player.get_time(), media.get_duration()))
             print('Position: %s' % self.player.get_position())
+            
+            #Print attributes
+            for key, value in self.song.get_attr().iteritems():
+                print('%s: %s' % (key, value))
+
         except Exception:
             print('Error: %s' % sys.exc_info()[1])
 
@@ -97,8 +102,11 @@ class CLI:
         moods = ['Happy', 'Sad', 'Angry']
 
         print('\nAll moods:\n')
-        for counter, mood in enumerate(moods):
-            print('  %i -> %s' % (counter, mood))
+        index = 0
+        for mood in moods:
+            if mood not in self.song.get_moods():
+                print('  %i -> %s' % (index, mood))
+                index += 1
         print('  n -> new mood')
         print('  -1 -> cancel')
 
@@ -130,7 +138,7 @@ class CLI:
 
     #Called in separate thread when song ends
     def end_callback(self, event):
-        print("End of song. Please type a new command (\'>\' for next song in playlist or \'n\' to enter a new song")
+        print("End of song. Please type a new command (\'>\' for next song in playlist or \'n\' to enter a new song)")
 
     def quit_app(self):
         """Stop and exit"""
