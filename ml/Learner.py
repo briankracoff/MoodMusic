@@ -2,6 +2,11 @@
 from sklearn.semi_supervised import LabelSpreading
 
 import numpy as np
+import cPickle as cp
+
+# KERNEL = 'gamma'     # fully connected, dense matrix, expensive
+                       # mem+time
+KERNEL = 'n_neighbors' # sparse matrix, not as expensive
 
 class Learner:
     
@@ -11,7 +16,7 @@ class Learner:
         # and vice versa
         self._intToMood = dict((i,m) for i,m in enumerate(moods))
         
-        self._model = mode()
+        self._model = mode(kernel=KERNEL)
 
     def model_songs(self, listOfSongs):
         data = [song.get_attr() + [m]
@@ -21,6 +26,10 @@ class Learner:
         data = self._normalize(np.array(data[:,:-1]))
         
         self._model = self._model.fit(data[:,:-1], data[:,-1])
+
+    def model_database(self, dbHelper):
+        songs = np.array(dbHelper.fetch_all_songs())
+                
 
     def categorize_songs_single(self, listOfSongs):
         data = np.array([song.get_attr() for song in listOfSongs])
@@ -44,3 +53,14 @@ class Learner:
         for i in xrange(arr.shape[1]):
             arr[:,i] = (arr[:,i] - arr[:,i].mean()) / arr[:,i].std()
         return arr
+
+    def save(self, path):
+        cp.dump(self, open(path, 'wb'))
+
+    @staticmethod
+    def load(self, path):
+        cp.load(open(path,'rb'))
+
+
+        
+    
