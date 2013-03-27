@@ -1,0 +1,124 @@
+For performance reasons each instance of the SqLite class can be created with a new database file.
+Also each database file may contain more that one namespace (table).
+
+
+To create an instance:
+
+>>
+sq1 = SqLite() # will open the default database file
+sq1 = SqLite("test") # will open the test.db file as source
+sq1 = SqLite(":memory") # create the table in memory (fast, good for searches)
+<<
+
+After initializing you should either set a namespace or install one:
+
+1. set a namespace (the namespace should already exist)
+
+>>
+sq1.setNamespace("test1") # use the test1 namespace (table)
+<<
+
+you can check the existance of a namespace using:
+
+>>
+sq1.hasNamespace("test1")
+<<
+
+2. install a namespace (create a new table)
+
+>>
+table_def = {"field1":"TEXT", "field2":"INTEGER", "field3":"BLOB"}
+
+sq1.installNamespace("test1", table_def)
+<<
+
+This will create the namespace "test1" with the definition table_def. it will also
+create an id field named "id" which is an auto-increment value and can be used for
+searching and removing items.
+
+NOTE: you can improve the table's performance by designing the table your self and using
+the runQuery() method to run the query and create the table.
+
+In rare cases you might need to reinstall a namespace or simply remove it. this can
+be done using:
+
+>>
+sq1.removeNamespace()
+<<
+
+------------------------------------------------------------- DATA MANIPULATION
+1. Inserting Data : you can insert data using one of the two ways:
+
+>>
+# insert a single item
+sq1.write({"field1":"Test Value 1", "field2":100, "field3":"something"})
+
+# insert multiple items at once
+many_writes = [
+               {"field1":"Test Value 2", "field2":200, "field3":"something 2"},
+               {"field1":"Test Value 3", "field2":300, "field3":"something 3"},
+               {"field1":"Test Value 4", "field2":400, "field3":"something 4"},
+               {"field1":"Test Value 5", "field2":500, "field3":"something 5"},
+               {"field1":"Test Value 6", "field2":600, "field3":"something 6"}]
+sq1.writeMany(many_writes)
+<<
+
+2. Deleting Data : Removing items are only possible using their ids:
+
+>>
+sq1.deleteOne(2) # delete item with id=2
+    
+sq1.deleteMany([2,3,4]) # delete multiple items at a time
+<<
+
+3. Searching / Reading Data
+Fetching data from the backend happens in two stages. you first search for the
+information you need and then you fetch the found items.
+
+3.1. Searching
+Searching is done using the search() method. it recives a SQL statement that will
+be placed in the WHERE clause of the search. but to abstract the SQL part. A class
+called 'C' is provided which provides four static method to help create conditions.
+
+>>
+# the following variable will be:
+# "((`field2` > 200 AND `field2` < 600) OR `field1` = 'Test Value2')"
+cond = C.Or(
+            C.And(
+             C._("field2", ">", 200),
+             C._("field2", "<", 600)
+             ),
+            C._("field1", "=", "Test Value 2")
+            )
+
+sq1.search(cond) # search using the cond expression
+<<
+
+The 'C' class has the following methods:
+	1. C.And(arg1, arg2, ...)              # arg1 AND arg2 AND ...
+	2. C.Or(arg1, arg2, ...)               # arg1 OR arg2 OR ...
+	3. C._(field_name, operator, value)    # `field_name` = 'value'
+	4. C._raw(field_name, operator, value) # `field_name` = value
+
+3.2. Fetching the result
+Once you have searched you can fetch the results using the read() method
+
+>>
+sq1.search(cond)
+
+all_data = sq1.read()
+
+first_20 = sq1.read(20)
+second_20 = sq1.read(20) # if called after the last one
+
+# sq1.read(1) is a special case where we fetch not a list but the item itself.
+# so it will NOT be [(field_1, field_2, ...)] instead it will be (field_1, field_2, ...)
+<<
+
+The returned results are of type SqLite.Row which will act like a dict. so you can do this:
+
+>>
+result =  sq1.read(1)
+
+result["field_1"]
+<<
