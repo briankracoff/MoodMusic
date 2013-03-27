@@ -11,7 +11,9 @@ and passing the create table string to the runQuery method.
 @warning: This module does not sanitized the data before execution. SQL INJECTION
 is possible if the given data is not sanitized.
 
-@note: for usage examples see : ./tests/data/SqLite_general.py
+@note: for usage examples see :
+    /tests/data/SqLite_general.py
+    /docs/API/SqLite.txt
 '''
 
 import sqlite3
