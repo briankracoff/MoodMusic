@@ -1,7 +1,7 @@
 
 from sklearn.semi_supervised import LabelSpreading
 
-class Learner 
+class Learner:
     
     def __init__(self, moods, mode=LabelSpreading):
         # identify moods as integers
