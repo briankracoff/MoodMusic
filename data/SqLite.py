@@ -8,8 +8,8 @@ Created on Mar 26, 2013
 keys and other SQL extras. for better performance consider creating the database
 and passing the create table string to the runQuery method.
 
-@warning: This module does not sanitized the data before execution. SQL INJECTION
-is possible if the given data is not sanitized.
+@warning: currently when searching the values are not sanitized. you need to sanitize
+them before sending to the methods of class 'C'
 
 @note: for usage examples see :
     /tests/data/SqLite_general.py
@@ -19,6 +19,7 @@ is possible if the given data is not sanitized.
 import sqlite3
 import config
 from os import path
+import codecs
 
 class SqLite(object):
     '''
@@ -74,10 +75,10 @@ class SqLite(object):
         if "id" in params:
             del params["id"]
         
-        sql = "CREATE TABLE IF NOT EXISTS `" + name + "` ("
-        sql += "`id` INTEGER PRIMARY KEY, "
+        sql = "CREATE TABLE IF NOT EXISTS " + self.__quote_identifier(name) + " ("
+        sql += "\"id\" INTEGER PRIMARY KEY, "
         for field_name, field_type in params.items():
-            sql += "`" + field_name + "` " + field_type + ","
+            sql += self.__quote_identifier(field_name) + " " + field_type + ","
         sql = sql[0:-1] + ")"
         
         result = self.runQuery(sql)
@@ -91,11 +92,10 @@ class SqLite(object):
         '''
         Checks if the namespace exists in the backend
         '''
-        sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='"
-        sql += self.getNamespace() + "'"
+        sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
         
         cursor = self.__connection.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, [self.getNamespace()])
         
         if cursor.fetchall():
             return True
@@ -107,17 +107,20 @@ class SqLite(object):
         Removes the current namespace.
         @warning: this operation removes all the data and is not reversable
         '''
-        sql = "DROP TABLE IF EXISTS `" + self.getNamespace() + "`"
+        sql = "DROP TABLE IF EXISTS " + self.__quote_identifier(self.getNamespace())
         
         return self.runQuery(sql)
         
-    def runQuery(self, sql):
+    def runQuery(self, sql, params = None):
         '''
         Runs the sql query and commits the changes to file
         '''
         cursor = self.__connection.cursor()
         
-        cursor.execute(sql)
+        if params is None:
+            cursor.execute(sql)
+        else:
+            cursor.execute(sql, params)
         
         return self.__connection.commit()
     
@@ -161,7 +164,9 @@ class SqLite(object):
         '''
         Creates an INSERT SQL statement
         '''
-        sql = "INSERT INTO `" + self.getNamespace() + "` ("
+        field_names = map(self.__quote_identifier, field_names)
+        
+        sql = "INSERT INTO " + self.__quote_identifier(self.getNamespace()) + " ("
         sql += ", ".join(field_names) + " ) VALUES ( "
         sql += ", ".join("?" for i in range(len(field_names))) + " ) "
         
@@ -174,7 +179,7 @@ class SqLite(object):
         @return Void
         '''
         
-        sql = "SELECT * FROM `" + self.getNamespace() + "`"
+        sql = "SELECT * FROM " + self.__quote_identifier(self.getNamespace()) + ""
         
         if cond:
             sql += " WHERE " + cond
@@ -207,10 +212,10 @@ class SqLite(object):
         '''
         Delete an item based on its id
         '''
-        sql = "DELETE FROM `" + self.getNamespace() + "` WHERE `"
-        sql += str(self.getIdField()) + "` = " + str(item_id)
+        sql = "DELETE FROM " + self.__quote_identifier(self.getNamespace()) + " WHERE "
+        sql += self.__quote_identifier(str(self.getIdField())) + " = ?"
         
-        return self.runQuery(sql)
+        return self.runQuery(sql, [item_id])
     
     def deleteMany(self, ids):
         '''
@@ -220,12 +225,26 @@ class SqLite(object):
         cursor = self.__connection.cursor()
         
         for item_id in ids:
-            sql = "DELETE FROM `" + self.getNamespace() + "` WHERE `"
-            sql += str(self.getIdField()) + "` = " + str(item_id)
+            sql = "DELETE FROM " + self.__quote_identifier(self.getNamespace()) + " WHERE "
+            sql += self.__quote_identifier(str(self.getIdField())) + " = ?"
         
-            cursor.execute(sql)
+            cursor.execute(sql, [item_id])
         
         return self.__connection.commit()
+    
+    def __quote_identifier(self, s, errors="replace"):
+        encodable = s.encode("utf-8", errors).decode("utf-8")
+    
+        nul_index = encodable.find("\x00")
+    
+        if nul_index >= 0:
+            error = UnicodeEncodeError("NUL-terminated utf-8", encodable,
+                                       nul_index, nul_index + 1, "NUL not allowed")
+            error_handler = codecs.lookup_error(errors)
+            replacement, _ = error_handler(error)
+            encodable = encodable.replace("\x00", replacement)
+    
+        return "\"" + encodable.replace("\"", "\"\"") + "\""
 
 class C(object):
     '''

@@ -1,7 +1,6 @@
 For performance reasons each instance of the SqLite class can be created with a new database file.
 Also each database file may contain more that one namespace (table).
 
-
 To create an instance:
 
 >>
@@ -79,6 +78,10 @@ information you need and then you fetch the found items.
 Searching is done using the search() method. it recives a SQL statement that will
 be placed in the WHERE clause of the search. but to abstract the SQL part. A class
 called 'C' is provided which provides four static method to help create conditions.
+
+WARNING: at the moments values given to C._() are not sanitized before execution so
+please sanitize them before sending them. I will change this in the future, now I can't
+find a simple way of doing it (see if you can).
 
 >>
 # the following variable will be:
