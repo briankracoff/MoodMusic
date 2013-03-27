@@ -1,6 +1,8 @@
 
 from sklearn.semi_supervised import LabelSpreading
 
+import numpy as np
+
 class Learner:
     
     def __init__(self, moods, mode=LabelSpreading):
@@ -30,7 +32,8 @@ class Learner:
         data = np.array([song.get_attr() for song in listOfSongs])
         predictions = self._model.predict_proba(data)
         
-        header = [self._intToMood[i] for i in xrange(predictions.shape[1])]
+        header = [self._intToMood[i] 
+                  for i in xrange(predictions.shape[1])]
 
         return header, predictions
 
@@ -38,6 +41,6 @@ class Learner:
         return [self._intToMood[i] for i in arr.tolist()]
 
     def _normalize(arr):
-        for i in arr.shape[1]:
+        for i in xrange(arr.shape[1]):
             arr[:,i] = (arr[:,i] - arr[:,1].mean()) / arr[:,i].std()
         return arr
