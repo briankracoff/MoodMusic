@@ -8,7 +8,7 @@ from song.song import Song
 def run(songPath):
     
     myCLI = CLI()
-    mySong = Song(songPath)
+    mySong = Song.song_from_filepath(songPath)
     myCLI.play_song(mySong)
 
 if __name__ == '__main__':
