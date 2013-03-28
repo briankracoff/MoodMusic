@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # Helper class for the DB methods
+# Usage: DB_Helper().method, since it is a singleton class
 
 from song.song import *
 from data.SqLite import SqLite, C
@@ -76,7 +77,6 @@ class DB_Helper(object):
     #Gets all of the data out of the Song namespace (except for id and hash)
     def all_songs(self):
         self.db.setNamespace(songNamespace)
-        songHash = DB_Helper._hash(filepath)
 
         #Get songdata from DB with hash
         self.db.search() 
