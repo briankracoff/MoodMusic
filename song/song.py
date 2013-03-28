@@ -3,11 +3,12 @@
 
 import os
 import sys
+from data.DB_Helper import DB_Helper
 
 class Song:
 
     def __init__(self, filePath, attributes, moods):
-        self.filePath = filePath
+        self.filepath = filePath
         self.file = Song._file_from_path(filePath)
         self.moods = moods
         self.attr = attributes
@@ -20,20 +21,18 @@ class Song:
 
         return Song(filepath, attributes, moods)
 
-
     def get_moods(self):
         return self.moods
 
     @staticmethod
     #Gets moods from DB
     def _find_moods(filepath):
-        return ['Happy', 'Sad']
-        #TODO: add DB stuff
+        return DB_Helper().moods_for_filepath(filepath)
 
     #User adds mood to DB
     def add_mood(self, newMood):
         self.moods.append(newMood)
-        #TODO: make connection in db
+        DB_Helper().add_mood(self.filepath, newMood)
 
     def get_attr(self):
         return self.attr;
@@ -42,8 +41,13 @@ class Song:
     #First checks the DB for attributes
     #If it doesn't find the song in the db, get the attributes from echonest and save song to db
     def _find_attr(filepath):
-        return {'test1':'value', 'test2':5}
-        #TODO: add DB stuff
+        attributes = DB_Helper().attributes_for_filepath(filepath)
+
+        if len(attributes) > 0:
+            return attributes
+        else:
+            #Use echonest if no entry in db
+            return {'test1':'value', 'test2':5}
 
     @staticmethod
     def _file_from_path(filePath):

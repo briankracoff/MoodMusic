@@ -88,26 +88,26 @@ class SqLite(object):
         
         return result
     
-    def hasNamespace(self):
+    def hasNamespace(self, name):
         '''
         Checks if the namespace exists in the backend
         '''
         sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
         
         cursor = self.__connection.cursor()
-        cursor.execute(sql, [self.getNamespace()])
+        cursor.execute(sql, [name])
         
         if cursor.fetchall():
             return True
         else:
             return False
         
-    def removeNamespace(self):
+    def removeNamespace(self, name):
         '''
         Removes the current namespace.
         @warning: this operation removes all the data and is not reversable
         '''
-        sql = "DROP TABLE IF EXISTS " + self.__quote_identifier(self.getNamespace())
+        sql = "DROP TABLE IF EXISTS " + self.__quote_identifier(name)
         
         return self.runQuery(sql)
         

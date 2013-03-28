@@ -10,6 +10,7 @@ import os
 import sys
 from collections import OrderedDict
 from inspect import getargspec
+from song.song import *
 
 try:
     from msvcrt import getch
@@ -98,10 +99,9 @@ class CLI:
         for mood in self.song.get_moods():
             print('  %s' % mood)
 
-        #TODO: replace this with dynamic data from db
-        moods = ['Happy', 'Sad', 'Angry']
+        moods = DB_Helper().all_moods()
 
-        print('\nAll moods:\n')
+        print('\nAdd to another mood:\n')
         index = 0
         for mood in moods:
             if mood not in self.song.get_moods():
@@ -115,7 +115,6 @@ class CLI:
         if moodIndex == 'n':
             #Create new mood and add song to it
             chosenMood = raw_input('Enter new mood name: ')
-            #TODO: create new mood in db
         else:
             try:
                 moodIndex = int(float(moodIndex))
