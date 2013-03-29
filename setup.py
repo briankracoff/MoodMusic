@@ -12,7 +12,7 @@ def get_attribute_schema():
         songTitle,
         songArtist,
         songBeatAverage,
-        songBeatDeviaton,
+        songBeatDeviation,
         songBarsAverage,
         songBarsDeviation,
         songDanceability,

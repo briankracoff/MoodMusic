@@ -5,12 +5,12 @@ commonId = "id"
 commonHash = "hash"
 
 #Song namespace
-songNamespace = "song"
+songNamespace = "Song"
 songFilePath = {'name': "filepath", 'type': 'TEXT'}
 songTitle = {'name': "title", 'type': 'TEXT'} 
 songArtist = {'name': "artist", 'type': 'TEXT'}
 songBeatAverage = {'name': "beat_average", 'type': 'REAL'}
-songBeatDeviaton = {'name': "beat_deviation", 'type': 'REAL'}
+songBeatDeviation = {'name': "beat_deviation", 'type': 'REAL'}
 songBarsAverage = {'name':"bars_average", 'type': 'REAL'}
 songBarsDeviation = {'name': 'bars_deviation', 'type': 'REAL'}
 songDanceability = {'name': 'danceability' , 'type': 'REAL'}

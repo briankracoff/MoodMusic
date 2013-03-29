@@ -2,7 +2,6 @@
 # Helper class for the DB methods
 # Usage: DB_Helper().method, since it is a singleton class
 
-from song.song import *
 from data.SqLite import SqLite, C
 from data.DB_constants import *
 
@@ -100,7 +99,7 @@ class DB_Helper(object):
     #Adds the song to the DB
     def add_song(self, attributesDict):
         self.db.setNamespace(songNamespace)
-        songHash = DB_Helper._hash(filepath)
+        songHash = DB_Helper._hash(attributesDict[songFilePath['name']])
 
         #Adds hash to attributes
         attributesDict[commonHash] = songHash

@@ -1,9 +1,9 @@
 #! /usr/bin/python
 
-from data.DB_Constants import *
+from data.DB_constants import *
 from data.DB_Helper import *
 
-import myconfig
+from myconfig import *
 import math
 
 from pyechonest import config
@@ -13,14 +13,14 @@ import os
 
 
 
-config.ECHO_NEST_API_KEY=myconfig.ECHO_NEST_API_KEY
+config.ECHO_NEST_API_KEY=ECHO_NEST_API_KEY
 
 
 
 ## function to read a whole library into the DB
 ## takea a path as an argument
-def library_attributes(libpath):
-    for dirname, dirnames, filenames in os.walk(libpath):
+def library_attributes():
+    for dirname, dirnames, filenames in os.walk(MUSIC_FOLDER):
         for filename in filenames:
             song_attributes(os.path.join(dirname, filename))
 
@@ -51,36 +51,36 @@ def get_attr(fp, pathstring):
     tatumsavg = get_average(track.tatums, 'duration')
     tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
     
-    song = { songFilePath: pathstring,
-             songTitle: str(track),
-             songArtist: str(track.artist),
-             songBeatAverage: beatavg,
-             songBeatDeviation: beatdev,
-             songBarsAverage: barsavg,
-             songBarsDeviation: barsdev,
-             songDanceability: track.danceability,
-             songDuration: track.duration,
-             songEndOfFadeIn: track.end_of_fade_in,
-             songEnergy: track.energy,
-             songKey: track.key,
-             songKeyConfidence: track.key_confidence,
-             songLiveness: track.liveness,
-             songLoudness: track.loudness,
-             songMode: track.mode,
-             songModeConfidence: track.mode_confidence,
-             songOffsetSeconds: track.offset_seconds,
-             songSectionsAverage: sectionsavg,
-             songSectionsDeviation: sectionsdeviation,
-             songSectionsCount: len(track.sections),
-             songSpeechiness: track.speechiness,
-             songStartOfFadeOut: track.start_of_fade_out,
-             songTatumsAverage: tatumsavg,
-             songTatumsDeviation: tatumsdev,
-             songTatumsCount: len(track.tatums),
-             songTempo: track.tempo,
-             songTempoConfidence: track.tempo_confidence,
-             songTimeSignature: track.time_signature,
-             songTimeSignatureConfidence: track.time_signature_confidence}
+    song = { songFilePath['name']: pathstring,
+             songTitle['name']: str(track),
+             songArtist['name']: str(track.artist),
+             songBeatAverage['name']: beatavg,
+             songBeatDeviation['name']: beatdev,
+             songBarsAverage['name']: barsavg,
+             songBarsDeviation['name']: barsdev,
+             songDanceability['name']: track.danceability,
+             songDuration['name']: track.duration,
+             songEndOfFadeIn['name']: track.end_of_fade_in,
+             songEnergy['name']: track.energy,
+             songKey['name']: track.key,
+             songKeyConfidence['name']: track.key_confidence,
+             songLiveness['name']: track.liveness,
+             songLoudness['name']: track.loudness,
+             songMode['name']: track.mode,
+             songModeConfidence['name']: track.mode_confidence,
+             songOffsetSeconds['name']: track.offset_seconds,
+             songSectionsAverage['name']: sectionsavg,
+             songSectionsDeviation['name']: sectionsdev,
+             songSectionsCount['name']: len(track.sections),
+             songSpeechiness['name']: track.speechiness,
+             songStartOfFadeOut['name']: track.start_of_fade_out,
+             songTatumsAverage['name']: tatumsavg,
+             songTatumsDeviation['name']: tatumsdev,
+             songTatumsCount['name']: len(track.tatums),
+             songTempo['name']: track.tempo,
+             songTempoConfidence['name']: track.tempo_confidence,
+             songTimeSignature['name']: track.time_signature,
+             songTimeSignatureConfidence['name']: track.time_signature_confidence}
  
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
@@ -102,4 +102,4 @@ def get_deviation(array, feature, average):
     return math.sqrt(aggr/len(array))
 
 
-    
+library_attributes()    
