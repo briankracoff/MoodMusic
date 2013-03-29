@@ -9,7 +9,7 @@ import os
 import re
 import urllib, urlparse
 
-class iTunes(object):
+class Input(object):
     '''
     Read all the files from the iTunes library.xml file
     '''

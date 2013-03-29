@@ -7,7 +7,7 @@ Created on Mar 29, 2013
 
 import os
 
-class Filesystem(object):
+class Input(object):
     '''
     Read user library from a path and import all songs
     '''
