@@ -21,18 +21,13 @@ class DB_Helper(object):
 
     #Returns a dictionary of attributes for a song's filepath
     def attributes_for_filepath(self, filepath):
-        self.db.setNamespace(songNamespace)
-        songHash = DB_Helper._hash(filepath)
-
-        #Get songdata from DB with hash
-        self.db.search(C._raw("hash", "=", songHash)) 
-        songData = self.db.read(1)
+        songData = self.get_song(filepath)
 
         #Removes non-attributes
         if songData != None:
             songData.pop(commonId, None)
             songData.pop(commonHash, None)
-            songData.pop(songFilename, None)
+            songData.pop(songFilepath, None)
             return songData
         else:
             return {}
@@ -88,6 +83,30 @@ class DB_Helper(object):
             song.pop(commonHash, None)
 
         return songData
+
+    #Get the song with the given hash
+    def get_song(self, filepath):
+        songHash = DB_Helper._hash(filepath)
+        self.db.setNamespace(songNamespace)
+
+        #Finds song if it exists
+        self.db.search(C._raw(commonHash, "=", songHash))
+        return self.db.read(1)
+
+    #Returns whether the filepath is in the DB or not
+    def is_in_db(self, filepath):
+        return self.get_song(filepath) != None
+
+    #Adds the song to the DB
+    def add_song(self, attributesDict):
+        self.db.setNamespace(songNamespace)
+        songHash = DB_Helper._hash(filepath)
+
+        #Adds hash to attributes
+        attributesDict[commonHash] = songHash
+
+        #Writes song to db
+        self.db.write(attributesDict)
 
     @staticmethod
     def _hash(filepath):

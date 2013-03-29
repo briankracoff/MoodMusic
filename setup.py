@@ -3,8 +3,8 @@
 # You must run this before using MoodMusic
 # NOTE: RUNNING THIS WILL ERASE ALL DATA IN DB AND RESET EVERYTHING
 
-from data.DB_Helper import *
-import data.DB_constants
+from data.SqLite import *
+from data.DB_constants import *
 
 def initializeDB():
     print "Starting setup...\n"
@@ -25,7 +25,7 @@ def initializeDB():
     print "Creating Song namespace"
     song_def = {
         commonHash:"TEXT",
-        songFilename:"TEXT"
+        songFilepath:"TEXT"
     }
     db.installNamespace(songNamespace, song_def)
     print "Song namespace created\n"
