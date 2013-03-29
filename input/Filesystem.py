@@ -24,7 +24,8 @@ class Filesystem(object):
     def Import(self, params):
         '''
         Reads a directory and returns a list of files it contains that match the
-        extensions
+        extensions. params should contain "path" which is the path of directory
+        to search.
         '''
         
         if "path" not in params or self.__max_size < 1:
