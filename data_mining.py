@@ -101,9 +101,5 @@ def get_deviation(array, feature, average):
         aggr += math.pow((k[feature] - average), 2)
     return math.sqrt(aggr/len(array))
 
-## hardcoding of my library for reading purposes
-#library_attributes('/Users/TomWeaver/Music/iTunes/iTunes Media/Music')
-
-display_db()
 
     
