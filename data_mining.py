@@ -1,6 +1,9 @@
 #! /usr/bin/python
 
-import myconfig
+from data.DB_constants import *
+from data.DB_Helper import *
+
+from myconfig import *
 import math
 
 from pyechonest import config
@@ -8,64 +11,16 @@ from pyechonest.track import track_from_file
 
 import os
 
-## Database initialization
-import sqlite3 as lite
-import sys
-
-con = lite.connect('output.db')
-
-with con:
-    cur = con.cursor()
-
-#    cur.execute("DROP TABLE IF EXISTS Songs")
-#    cur.execute("CREATE TABLE Songs(Title, Artist, Path, Beat_Average, Beat_Deviation, Bars_Average, Bars_Deviation, Danceability, Duration, End_of_fade_in, Energy, Key, Key_Confidence, Liveness, Loudness, Mode, Mode_Confidence, Offset_Seconds, Sections_Average, Sections_Deviation, Sections_Count, Speechiness, Start_of_fade_out, Tatums_Average, Tatums_Deviation, Tatums_Count, Tempo, Tempo_Confidence, Time_Signature, Time_Signature_Confidence)")
 
 
-
-config.ECHO_NEST_API_KEY=myconfig.ECHO_NEST_API_KEY
-
-
-## function to insert a song and all its attributes into the DB
-def put_in_db(song):
-    con = lite.connect('output.db')
-
-    with con:
-        cur = con.cursor()
-
-        i = 1
-        qmarks = "( ? "
-        while i < len(song):            
-            qmarks += " , ? "
-            i += 1
-        
-        cur.execute("INSERT INTO Songs VALUES" + qmarks + ")", song)
+config.ECHO_NEST_API_KEY=ECHO_NEST_API_KEY
 
 
-## function to query the DB for the presence of a song
-def in_db(songpath):
-    con = lite.connect('output.db')
-    with con:
-        cur.execute("SELECT Path FROM Songs")
-        rows = cur.fetchall()
-        for row in rows:
-            if str(row).find(songpath) != -1:
-                return True
-        return False
-
-## function to display the DB
-## just for diagnostics
-def display_db():
-    con = lite.connect('output.db')
-    with con:
-        cur.execute("SELECT * FROM Songs")
-        rows = cur.fetchall()
-        for row in rows:
-            print str(row)
 
 ## function to read a whole library into the DB
 ## takea a path as an argument
-def library_attributes(libpath):
-    for dirname, dirnames, filenames in os.walk(libpath):
+def library_attributes():
+    for dirname, dirnames, filenames in os.walk(MUSIC_FOLDER):
         for filename in filenames:
             song_attributes(os.path.join(dirname, filename))
 
@@ -73,7 +28,7 @@ def library_attributes(libpath):
 ## takes a filepath as an argument
  # this could be augmented to take a hash instead
 def song_attributes(songpath):
-    if in_db(songpath) == False:
+    if not DB_Helper().is_in_db(songpath):
         fp = open(songpath, 'rb')
         print fp
         ## check file extension to only read valid types
@@ -96,11 +51,40 @@ def get_attr(fp, pathstring):
     tatumsavg = get_average(track.tatums, 'duration')
     tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
     
-    song = [str(track), str(track.artist), pathstring, beatavg, beatdev, barsavg, barsdev, str(track.danceability), str(track.duration), str(track.end_of_fade_in), str(track.energy), str(track.key), str(track.key_confidence), str(track.liveness), str(track.loudness), str(track.mode), str(track.mode_confidence), str(track.offset_seconds), sectionsavg, sectionsdev, len(track.sections), str(track.speechiness), str(track.start_of_fade_out), tatumsavg, tatumsdev, len(track.tatums), str(track.tempo), str(track.tempo_confidence), str(track.time_signature), str(track.time_signature_confidence)]
-
+    song = { songFilePath['name']: pathstring,
+             songTitle['name']: str(track),
+             songArtist['name']: str(track.artist),
+             songBeatAverage['name']: beatavg,
+             songBeatDeviation['name']: beatdev,
+             songBarsAverage['name']: barsavg,
+             songBarsDeviation['name']: barsdev,
+             songDanceability['name']: track.danceability,
+             songDuration['name']: track.duration,
+             songEndOfFadeIn['name']: track.end_of_fade_in,
+             songEnergy['name']: track.energy,
+             songKey['name']: track.key,
+             songKeyConfidence['name']: track.key_confidence,
+             songLiveness['name']: track.liveness,
+             songLoudness['name']: track.loudness,
+             songMode['name']: track.mode,
+             songModeConfidence['name']: track.mode_confidence,
+             songOffsetSeconds['name']: track.offset_seconds,
+             songSectionsAverage['name']: sectionsavg,
+             songSectionsDeviation['name']: sectionsdev,
+             songSectionsCount['name']: len(track.sections),
+             songSpeechiness['name']: track.speechiness,
+             songStartOfFadeOut['name']: track.start_of_fade_out,
+             songTatumsAverage['name']: tatumsavg,
+             songTatumsDeviation['name']: tatumsdev,
+             songTatumsCount['name']: len(track.tatums),
+             songTempo['name']: track.tempo,
+             songTempoConfidence['name']: track.tempo_confidence,
+             songTimeSignature['name']: track.time_signature,
+             songTimeSignatureConfidence['name']: track.time_signature_confidence}
+ 
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
-    put_in_db(song)
+    DB_Helper().add_song(song)
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
@@ -117,9 +101,5 @@ def get_deviation(array, feature, average):
         aggr += math.pow((k[feature] - average), 2)
     return math.sqrt(aggr/len(array))
 
-## hardcoding of my library for reading purposes
-#library_attributes('/Users/TomWeaver/Music/iTunes/iTunes Media/Music')
 
-display_db()
-
-    
+library_attributes()    

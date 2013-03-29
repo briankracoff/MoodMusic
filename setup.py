@@ -6,6 +6,40 @@
 from data.SqLite import *
 from data.DB_constants import *
 
+def get_attribute_schema():
+    return [
+        songFilePath,
+        songTitle,
+        songArtist,
+        songBeatAverage,
+        songBeatDeviation,
+        songBarsAverage,
+        songBarsDeviation,
+        songDanceability,
+        songDuration,
+        songEndOfFadeIn,
+        songEnergy,
+        songKey,
+        songKeyConfidence,
+        songLiveness,
+        songLoudness,
+        songMode,
+        songModeConfidence,
+        songOffsetSeconds,
+        songSectionsAverage,
+        songSectionsDeviation,
+        songSectionsCount,
+        songSpeechiness,
+        songStartOfFadeOut,
+        songTatumsAverage,
+        songTatumsDeviation,
+        songTatumsCount,
+        songTempo,
+        songTempoConfidence,
+        songTimeSignature,
+        songTimeSignatureConfidence
+    ]
+
 def initializeDB():
     print "Starting setup...\n"
     db = SqLite();
@@ -24,9 +58,12 @@ def initializeDB():
 
     print "Creating Song namespace"
     song_def = {
-        commonHash:"TEXT",
-        songFilename:"TEXT"
+        commonHash:"TEXT"
     }
+
+    for attribute in get_attribute_schema():
+        song_def[attribute['name']] = attribute['type']
+
     db.installNamespace(songNamespace, song_def)
     print "Song namespace created\n"
 
