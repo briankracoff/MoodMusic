@@ -1,5 +1,8 @@
 #! /usr/bin/python
 
+from data.DB_Constants import *
+from data.DB_Helper import *
+
 import myconfig
 import math
 
@@ -8,59 +11,11 @@ from pyechonest.track import track_from_file
 
 import os
 
-## Database initialization
-import sqlite3 as lite
-import sys
-
-con = lite.connect('output.db')
-
-with con:
-    cur = con.cursor()
-
-#    cur.execute("DROP TABLE IF EXISTS Songs")
-#    cur.execute("CREATE TABLE Songs(Title, Artist, Path, Beat_Average, Beat_Deviation, Bars_Average, Bars_Deviation, Danceability, Duration, End_of_fade_in, Energy, Key, Key_Confidence, Liveness, Loudness, Mode, Mode_Confidence, Offset_Seconds, Sections_Average, Sections_Deviation, Sections_Count, Speechiness, Start_of_fade_out, Tatums_Average, Tatums_Deviation, Tatums_Count, Tempo, Tempo_Confidence, Time_Signature, Time_Signature_Confidence)")
-
 
 
 config.ECHO_NEST_API_KEY=myconfig.ECHO_NEST_API_KEY
 
 
-## function to insert a song and all its attributes into the DB
-def put_in_db(song):
-    con = lite.connect('output.db')
-
-    with con:
-        cur = con.cursor()
-
-        i = 1
-        qmarks = "( ? "
-        while i < len(song):            
-            qmarks += " , ? "
-            i += 1
-        
-        cur.execute("INSERT INTO Songs VALUES" + qmarks + ")", song)
-
-
-## function to query the DB for the presence of a song
-def in_db(songpath):
-    con = lite.connect('output.db')
-    with con:
-        cur.execute("SELECT Path FROM Songs")
-        rows = cur.fetchall()
-        for row in rows:
-            if str(row).find(songpath) != -1:
-                return True
-        return False
-
-## function to display the DB
-## just for diagnostics
-def display_db():
-    con = lite.connect('output.db')
-    with con:
-        cur.execute("SELECT * FROM Songs")
-        rows = cur.fetchall()
-        for row in rows:
-            print str(row)
 
 ## function to read a whole library into the DB
 ## takea a path as an argument
@@ -73,7 +28,7 @@ def library_attributes(libpath):
 ## takes a filepath as an argument
  # this could be augmented to take a hash instead
 def song_attributes(songpath):
-    if in_db(songpath) == False:
+    if not DB_Helper().is_in_db(songpath):
         fp = open(songpath, 'rb')
         print fp
         ## check file extension to only read valid types
@@ -129,7 +84,7 @@ def get_attr(fp, pathstring):
  
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
-    put_in_db(song)
+    DB_Helper().add_song(song)
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
