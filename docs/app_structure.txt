@@ -136,7 +136,7 @@ Database Structure
 =======================================================================================================================
 Song(
 hash -> hashcode of filename
-filename -> filename
+filepath -> filepath string
 attr1 -> value 1
 attr2 -> value 2
 ...
