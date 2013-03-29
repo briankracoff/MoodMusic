@@ -96,8 +96,37 @@ def get_attr(fp, pathstring):
     tatumsavg = get_average(track.tatums, 'duration')
     tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
     
-    song = [str(track), str(track.artist), pathstring, beatavg, beatdev, barsavg, barsdev, str(track.danceability), str(track.duration), str(track.end_of_fade_in), str(track.energy), str(track.key), str(track.key_confidence), str(track.liveness), str(track.loudness), str(track.mode), str(track.mode_confidence), str(track.offset_seconds), sectionsavg, sectionsdev, len(track.sections), str(track.speechiness), str(track.start_of_fade_out), tatumsavg, tatumsdev, len(track.tatums), str(track.tempo), str(track.tempo_confidence), str(track.time_signature), str(track.time_signature_confidence)]
-
+    song = { songFilePath: pathstring,
+             songTitle: str(track),
+             songArtist: str(track.artist),
+             songBeatAverage: beatavg,
+             songBeatDeviation: beatdev,
+             songBarsAverage: barsavg,
+             songBarsDeviation: barsdev,
+             songDanceability: track.danceability,
+             songDuration: track.duration,
+             songEndOfFadeIn: track.end_of_fade_in,
+             songEnergy: track.energy,
+             songKey: track.key,
+             songKeyConfidence: track.key_confidence,
+             songLiveness: track.liveness,
+             songLoudness: track.loudness,
+             songMode: track.mode,
+             songModeConfidence: track.mode_confidence,
+             songOffsetSeconds: track.offset_seconds,
+             songSectionsAverage: sectionsavg,
+             songSectionsDeviation: sectionsdeviation,
+             songSectionsCount: len(track.sections),
+             songSpeechiness: track.speechiness,
+             songStartOfFadeOut: track.start_of_fade_out,
+             songTatumsAverage: tatumsavg,
+             songTatumsDeviation: tatumsdev,
+             songTatumsCount: len(track.tatums),
+             songTempo: track.tempo,
+             songTempoConfidence: track.tempo_confidence,
+             songTimeSignature: track.time_signature,
+             songTimeSignatureConfidence: track.time_signature_confidence}
+ 
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
     put_in_db(song)
