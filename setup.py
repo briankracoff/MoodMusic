@@ -25,7 +25,7 @@ def initializeDB():
     print "Creating Song namespace"
     song_def = {
         commonHash:"TEXT",
-        songFilename:"TEXT"
+        songFilepath:"TEXT"
     }
     db.installNamespace(songNamespace, song_def)
     print "Song namespace created\n"
