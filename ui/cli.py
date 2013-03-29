@@ -84,12 +84,15 @@ class CLI:
     #Go to next track in playlist
     def next_track(self):
         """Go to next track in playlist"""
+        song = Song.song_from_filepath(self.nextSongPath)
+        self.play_song(song)
 
     #Open a new track to play
     def play_different_track(self):
         """Play a different track"""
         filePath = raw_input('Enter a file path to a new song: ')
-        self.play_song(filePath)
+        song = Song.song_from_filepath(filePath)
+        self.play_song(song)
         
     #Add the current track to a user-inputted mood
     def add_to_mood(self):
@@ -145,6 +148,7 @@ class CLI:
 
     def play_song(self, song):
         self.song = song
+        self.nextSongPath = song.file
 
         try:
             media = self.instance.media_new(song.file)
