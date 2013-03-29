@@ -27,6 +27,10 @@ def initializeDB():
         commonHash:"TEXT",
         songFilepath:"TEXT"
     }
+
+    for attribute in songAttributes:
+        song_def[attribute['name']] = attribute['type']
+
     db.installNamespace(songNamespace, song_def)
     print "Song namespace created\n"
 
