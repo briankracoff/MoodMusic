@@ -3,8 +3,8 @@
 # You must run this before using MoodMusic
 # NOTE: RUNNING THIS WILL ERASE ALL DATA IN DB AND RESET EVERYTHING
 
-from data.DB_Helper import *
-import data.DB_constants
+from data.SqLite import *
+from data.DB_constants import *
 
 def initializeDB():
     print "Starting setup...\n"
