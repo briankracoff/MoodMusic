@@ -27,7 +27,7 @@ class DB_Helper(object):
         if songData != None:
             songData.pop(commonId, None)
             songData.pop(commonHash, None)
-            songData.pop(songFilepath, None)
+            songData.pop(songFilePath, None)
             return songData
         else:
             return {}
