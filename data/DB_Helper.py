@@ -99,13 +99,17 @@ class DB_Helper(object):
     #Adds the song to the DB
     def add_song(self, attributesDict):
         self.db.setNamespace(songNamespace)
+        
         songHash = DB_Helper._hash(attributesDict[songFilePath['name']])
 
         #Adds hash to attributes
         attributesDict[commonHash] = songHash
 
         #Writes song to db
-        self.db.write(attributesDict)
+        try:
+            self.db.write(attributesDict)
+        except Exception:
+            print "uh oh!"
 
     @staticmethod
     def _hash(filepath):

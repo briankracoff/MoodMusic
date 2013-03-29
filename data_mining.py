@@ -40,47 +40,123 @@ def song_attributes(songpath):
 def get_attr(fp, pathstring):
     track = track_from_file(fp, 'mp3')
 
-    beatavg = get_average(track.beats, 'duration')
-    beatdev = get_deviation(track.beats, 'duration', beatavg)
-    barsavg = get_average(track.bars, 'duration')
-    barsdev = get_deviation(track.bars, 'duration', barsavg)
-    sectionsavg = get_average(track.sections, 'duration')
-    sectionsdev = get_deviation(track.sections, 'duration', sectionsavg)
-    segmentsavg = get_average(track.segments, 'duration')
-    segmentsdev = get_deviation(track.segments, 'duration', segmentsavg)
-    tatumsavg = get_average(track.tatums, 'duration')
-    tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
+    beatsavg = None
+    beatsdev = None
+    barsavg = None
+    barsdev = None
+    sectionsavg = None
+    sectionsdev = None
+    sectionscount = None
+    segmentsavg = None
+    segmentsdev = None
+    tatumsavg = None
+    tatumsdev = None
+    tatumscount = None
+    thisartist = None
+    thisdanceability = None
+    thisduration = None
+    thisfadein = None
+    thisenergy = None
+    thiskey = None
+    thiskeyconfidence = None
+    thisliveness = None
+    thisloudness = None
+    thismode = None
+    thismodeconfidence = None
+    thisoffset = None
+    thisspeechiness = None
+    thisfadeout = None
+    thistempo = None
+    thistempoconfidence = None
+    thistimesig = None
+    thistimesigcon = None
+        
+    if hasattr(track, 'beats'):
+        beatsavg = get_average(track.beats, 'duration')
+        beatsdev = get_deviation(track.beats, 'duration', beatsavg)
+    if hasattr(track, 'bars'):
+        barsavg = get_average(track.bars, 'duration')
+        barsdev = get_deviation(track.bars, 'duration', barsavg)
+    if hasattr(track, 'sections'):
+        sectionsavg = get_average(track.sections, 'duration')
+        sectionsdev = get_deviation(track.sections, 'duration', sectionsavg)
+        sectionscount = len(track.sections)
+    if hasattr(track, 'segments'):
+        segmentsavg = get_average(track.segments, 'duration')
+        segmentsdev = get_deviation(track.segments, 'duration', segmentsavg)
+    if hasattr(track, 'tatums'):
+        tatumsavg = get_average(track.tatums, 'duration')
+        tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
+        tatumscount = len(track.tatums)
+
+    if hasattr(track, 'artist'):
+        thisartist = str(track.artist)
+    if hasattr(track, 'danceability'):
+        thisdanceability = track.danceability
+    if hasattr(track, 'duration'):
+        thisduration = track.duration
+    if hasattr(track, 'end_of_fade_in'):
+        thisfadein = track.end_of_fade_in
+    if hasattr(track, 'energy'):
+        thisenergy = track.energy
+    if hasattr(track, 'key'):
+        thiskey = track.key
+    if hasattr(track, 'key_confidence'):
+        thiskeyconfidence = track.key_confidence
+    if hasattr(track, 'liveness'):
+        thisliveness = track.liveness
+    if hasattr(track, 'loudness'):
+        thisloudness = track.loudness
+    if hasattr(track, 'mode'):
+        thismode = track.mode
+    if hasattr(track, 'mode_confidence'):
+        thismodeconfidence = track.mode_confidence
+    if hasattr(track, 'offset_seconds'):
+        thisoffset = track.offset_seconds
+    if hasattr(track, 'speechiness'):
+        thisspeechiness = track.speechiness
+    if hasattr(track, 'start_of_fade_out'):
+        thisfadeout = track.start_of_fade_out
+    if hasattr(track, 'tempo'):
+        thistempo = track.tempo
+    if hasattr(track, 'tempo_confidence'):
+        thistempoconfidence = track.tempo_confidence
+    if hasattr(track, 'time_signature'):
+        thistimesig = track.time_signature
+    if hasattr(track, 'time_signature_confidence'):
+        thistimesigcon = track.time_signature_confidence
+
     
     song = { songFilePath['name']: pathstring,
              songTitle['name']: str(track),
-             songArtist['name']: str(track.artist),
-             songBeatAverage['name']: beatavg,
-             songBeatDeviation['name']: beatdev,
+             songArtist['name']: thisartist,
+             songBeatAverage['name']: beatsavg,
+             songBeatDeviation['name']: beatsdev,
              songBarsAverage['name']: barsavg,
              songBarsDeviation['name']: barsdev,
-             songDanceability['name']: track.danceability,
-             songDuration['name']: track.duration,
-             songEndOfFadeIn['name']: track.end_of_fade_in,
-             songEnergy['name']: track.energy,
-             songKey['name']: track.key,
-             songKeyConfidence['name']: track.key_confidence,
-             songLiveness['name']: track.liveness,
-             songLoudness['name']: track.loudness,
-             songMode['name']: track.mode,
-             songModeConfidence['name']: track.mode_confidence,
-             songOffsetSeconds['name']: track.offset_seconds,
+             songDanceability['name']: thisdanceability,
+             songDuration['name']: thisduration,
+             songEndOfFadeIn['name']: thisfadein,
+             songEnergy['name']: thisenergy,
+             songKey['name']: thiskey,
+             songKeyConfidence['name']: thiskeyconfidence,
+             songLiveness['name']: thisliveness,
+             songLoudness['name']: thisloudness,
+             songMode['name']: thismode,
+             songModeConfidence['name']: thismodeconfidence,
+             songOffsetSeconds['name']: thisoffset,
              songSectionsAverage['name']: sectionsavg,
              songSectionsDeviation['name']: sectionsdev,
-             songSectionsCount['name']: len(track.sections),
-             songSpeechiness['name']: track.speechiness,
-             songStartOfFadeOut['name']: track.start_of_fade_out,
+             songSectionsCount['name']: sectionscount,
+             songSpeechiness['name']: thisspeechiness,
+             songStartOfFadeOut['name']: thisfadeout,
              songTatumsAverage['name']: tatumsavg,
              songTatumsDeviation['name']: tatumsdev,
-             songTatumsCount['name']: len(track.tatums),
-             songTempo['name']: track.tempo,
-             songTempoConfidence['name']: track.tempo_confidence,
-             songTimeSignature['name']: track.time_signature,
-             songTimeSignatureConfidence['name']: track.time_signature_confidence}
+             songTatumsCount['name']: tatumscount,
+             songTempo['name']: thistempo,
+             songTempoConfidence['name']: thistempoconfidence,
+             songTimeSignature['name']: thistimesig,
+             songTimeSignatureConfidence['name']: thistimesigcon}
  
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
