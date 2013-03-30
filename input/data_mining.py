@@ -1,31 +1,14 @@
 #! /usr/bin/python
 
-
-import sys
-import os
-
-#####
-## If these two lines don't work, take them out and
-## move this module back into the main MoodMusic folder
-addpath = os.path.abspath('data_mining.py').replace('/input/data_mining.py', '')
-sys.path.insert(0, addpath)
-########
-
-from data.DB_constants import *
 from data.DB_Helper import *
-
+import os
 from myconfig import *
 import math
 
-from pyechonest import config
+from pyechonest import config as pyechonest_config
 from pyechonest.track import track_from_file
 
-
-
-
-config.ECHO_NEST_API_KEY=ECHO_NEST_API_KEY
-
-
+pyechonest_config.ECHO_NEST_API_KEY=ECHO_NEST_API_KEY
 
 ## function to read a whole library into the DB
 ## takea a path as an argument
@@ -186,6 +169,4 @@ def get_deviation(array, feature, average):
     for k in array:
         aggr += math.pow((k[feature] - average), 2)
     return math.sqrt(aggr/len(array))
-
-
-library_attributes()    
+    
