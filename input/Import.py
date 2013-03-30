@@ -7,6 +7,8 @@ Created on Mar 29, 2013
 
 import os, threading
 import iTunes, Filesystem
+from data_mining import get_attr
+from input import data_mining
 
 class Importer(object):
     '''
@@ -44,8 +46,9 @@ class Importer(object):
         '''
         This is called to fetch song data
         '''
-        # do some stuff
-        self.__files
+        for song in self.__files:
+            with open(song, 'rb') as fp:
+                get_attr(fp, song)
     
     def isAlive(self):
         '''
