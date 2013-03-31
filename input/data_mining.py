@@ -61,21 +61,22 @@ def get_attr(fp, pathstring):
     thistempoconfidence = None
     thistimesig = None
     thistimesigcon = None
+    thistitle = None
         
-    if hasattr(track, 'beats'):
+    if hasattr(track, 'beats') and len(track.beats) > 0:
         beatsavg = get_average(track.beats, 'duration')
         beatsdev = get_deviation(track.beats, 'duration', beatsavg)
-    if hasattr(track, 'bars'):
+    if hasattr(track, 'bars') and len(track.bars) > 0:
         barsavg = get_average(track.bars, 'duration')
         barsdev = get_deviation(track.bars, 'duration', barsavg)
-    if hasattr(track, 'sections'):
+    if hasattr(track, 'sections') and len(track.sections) > 0:
         sectionsavg = get_average(track.sections, 'duration')
         sectionsdev = get_deviation(track.sections, 'duration', sectionsavg)
         sectionscount = len(track.sections)
-    if hasattr(track, 'segments'):
+    if hasattr(track, 'segments') and len(track.segments) > 0:
         segmentsavg = get_average(track.segments, 'duration')
         segmentsdev = get_deviation(track.segments, 'duration', segmentsavg)
-    if hasattr(track, 'tatums'):
+    if hasattr(track, 'tatums') and len(track.tatums) > 0:
         tatumsavg = get_average(track.tatums, 'duration')
         tatumsdev = get_deviation(track.tatums, 'duration', tatumsavg)
         tatumscount = len(track.tatums)
@@ -116,10 +117,12 @@ def get_attr(fp, pathstring):
         thistimesig = track.time_signature
     if hasattr(track, 'time_signature_confidence'):
         thistimesigcon = track.time_signature_confidence
+    if hasattr(track, 'title'):
+        thistitle = str(track)
 
     
     song = { songFilePath['name']: pathstring,
-             songTitle['name']: str(track),
+             songTitle['name']: thistitle,
              songArtist['name']: thisartist,
              songBeatAverage['name']: beatsavg,
              songBeatDeviation['name']: beatsdev,
@@ -155,16 +158,22 @@ def get_attr(fp, pathstring):
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
-    aggr = 0
-    for k in array:
-        aggr += k[feature]
-    return aggr/len(array)
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += k[feature]
+        return aggr/len(array)
+    else:
+        return 0
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
 def get_deviation(array, feature, average):
-    aggr = 0
-    for k in array:
-        aggr += math.pow((k[feature] - average), 2)
-    return math.sqrt(aggr/len(array))
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += math.pow((k[feature] - average), 2)
+        return math.sqrt(aggr/len(array))
+    else:
+        return 0
     
