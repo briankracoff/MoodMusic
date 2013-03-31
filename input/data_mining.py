@@ -20,14 +20,12 @@ def library_attributes():
 ## function to read an individual song into the DB
 ## takes a filepath as an argument
  # this could be augmented to take a hash instead
-def song_attributes(songpath):
+def song_attributes(songpath, verbose = True):
     if not DB_Helper().is_in_db(songpath):
         fp = open(songpath, 'rb')
-        print fp
-        ## check file extension to only read valid types
-         # if there's a better way to check file extensions, that would be good
-        if (str(fp).find('.mp3') != -1) or  (str(fp).find('.m4a') != -1):
-            get_attr(fp, songpath)
+        print "Harvesting: " + songpath
+        
+        get_attr(fp, songpath)
             
 ## function that does the grunt work of reading a track and populating a list of attributes
 def get_attr(fp, pathstring):

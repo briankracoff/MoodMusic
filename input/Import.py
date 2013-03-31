@@ -3,12 +3,12 @@ Created on Mar 29, 2013
 
 @author: Behrooz Afghahi
 @version: 0.1
+@see: /docs/API/Input.Importer.txt
 '''
 
 import os, threading
 import iTunes, Filesystem
-from data_mining import get_attr
-from input import data_mining
+from data_mining import song_attributes
 
 class Importer(object):
     '''
@@ -47,8 +47,7 @@ class Importer(object):
         This is called to fetch song data
         '''
         for song in self.__files:
-            with open(song, 'rb') as fp:
-                get_attr(fp, song)
+            song_attributes(song, False)
     
     def isAlive(self):
         '''
