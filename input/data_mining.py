@@ -29,7 +29,10 @@ def song_attributes(songpath, verbose = True):
             
 ## function that does the grunt work of reading a track and populating a list of attributes
 def get_attr(fp, pathstring):
-    track = track_from_file(fp, 'mp3')
+    try:
+        track = track_from_file(fp, 'mp3')
+    except Exception:
+        return
 
     beatsavg = None
     beatsdev = None
