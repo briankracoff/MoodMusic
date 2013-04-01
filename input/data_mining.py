@@ -20,15 +20,20 @@ def library_attributes():
 ## function to read an individual song into the DB
 ## takes a filepath as an argument
  # this could be augmented to take a hash instead
-def song_attributes(songpath, verbose = True):
-    if not DB_Helper().is_in_db(songpath):
+def song_attributes(songpath, verbose = True, db = None):
+    if db is None:
+        db = DB_Helper()
+    
+    if not db.is_in_db(songpath):
         fp = open(songpath, 'rb')
-        print "Harvesting: " + songpath
         
-        get_attr(fp, songpath)
+        if verbose:
+            print "Harvesting: " + songpath
+        
+        get_attr(fp, songpath, db)
             
 ## function that does the grunt work of reading a track and populating a list of attributes
-def get_attr(fp, pathstring):
+def get_attr(fp, pathstring, db):
     try:
         track = track_from_file(fp, 'mp3')
     except Exception:
@@ -157,7 +162,7 @@ def get_attr(fp, pathstring):
  
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
-    DB_Helper().add_song(song)
+    db.add_song(song)
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):

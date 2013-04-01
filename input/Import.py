@@ -9,6 +9,7 @@ Created on Mar 29, 2013
 import os, threading
 import iTunes, Filesystem
 from data_mining import song_attributes
+from data.DB_Helper import *
 
 class Importer(object):
     '''
@@ -46,8 +47,12 @@ class Importer(object):
         '''
         This is called to fetch song data
         '''
+        #print ("Started harversting files")
+        db = DB_Helper(True)
+        
         for song in self.__files:
-            song_attributes(song, False)
+            print("File Done !")
+            song_attributes(song, False, db)
     
     def isAlive(self):
         '''

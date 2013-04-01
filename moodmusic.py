@@ -8,15 +8,14 @@ from input.Import import *
 import myconfig
 
 def run(songPath):
+    #Start background thread importer
+    importer = Importer(myconfig.MUSIC_LIBRARY_FILE_PATH, 100)
+    importer.startDaemon()
 
     #Start CLI
     application = CLI()
     mySong = Song.song_from_filepath(songPath)
     application.play_song(mySong)
-
-    #Start background thread importer
-    importer = Importer(MUSIC_LIBRARY_FILE_PATH, 100)
-    importer.startDaemon()
 
 if __name__ == '__main__':
     if sys.argv[1:] and sys.argv[1] not in ('-h', '--help'):
