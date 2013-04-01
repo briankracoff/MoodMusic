@@ -15,7 +15,7 @@ def run(songPath):
     application.play_song(mySong)
 
     #Start background thread importer
-    importer = Importer(MUSIC_LIBRARY_FILE_PATH, 100)
+    importer = Importer(MUSIC_LIBRARY_FILE_PATH, 1000)
     importer.startDaemon()
 
 if __name__ == '__main__':
