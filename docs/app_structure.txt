@@ -130,3 +130,19 @@ MoodMusic/
 |
 | -- setup.py
 | -- README
+
+=======================================================================================================================
+Database Structure
+=======================================================================================================================
+Song(
+hash -> hashcode of filename
+filepath -> filepath string
+attr1 -> value 1
+attr2 -> value 2
+...
+)
+
+Mood(
+hash -> hascode of filename
+title -> string name of mood
+)

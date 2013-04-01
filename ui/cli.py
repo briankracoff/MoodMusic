@@ -10,6 +10,7 @@ import os
 import sys
 from collections import OrderedDict
 from inspect import getargspec
+from song.song import *
 
 try:
     from msvcrt import getch
@@ -52,6 +53,11 @@ class CLI:
             print('Media: %s' % bytes_to_str(media.get_mrl()))
             print('Current time: %s/%s' % (self.player.get_time(), media.get_duration()))
             print('Position: %s' % self.player.get_position())
+            
+            #Print attributes
+            for key, value in self.song.get_attr().iteritems():
+                print('%s: %s' % (key, value))
+
         except Exception:
             print('Error: %s' % sys.exc_info()[1])
 
@@ -78,12 +84,15 @@ class CLI:
     #Go to next track in playlist
     def next_track(self):
         """Go to next track in playlist"""
+        song = Song.song_from_filepath(self.nextSongPath)
+        self.play_song(song)
 
     #Open a new track to play
     def play_different_track(self):
         """Play a different track"""
         filePath = raw_input('Enter a file path to a new song: ')
-        self.play_song(filePath)
+        song = Song.song_from_filepath(filePath)
+        self.play_song(song)
         
     #Add the current track to a user-inputted mood
     def add_to_mood(self):
@@ -93,12 +102,14 @@ class CLI:
         for mood in self.song.get_moods():
             print('  %s' % mood)
 
-        #TODO: replace this with dynamic data from db
-        moods = ['Happy', 'Sad', 'Angry']
+        moods = DB_Helper().all_moods()
 
-        print('\nAll moods:\n')
-        for counter, mood in enumerate(moods):
-            print('  %i -> %s' % (counter, mood))
+        print('\nAdd to another mood:\n')
+        index = 0
+        for mood in moods:
+            if mood not in self.song.get_moods():
+                print('  %i -> %s' % (index, mood))
+                index += 1
         print('  n -> new mood')
         print('  -1 -> cancel')
 
@@ -107,7 +118,6 @@ class CLI:
         if moodIndex == 'n':
             #Create new mood and add song to it
             chosenMood = raw_input('Enter new mood name: ')
-            #TODO: create new mood in db
         else:
             try:
                 moodIndex = int(float(moodIndex))
@@ -130,7 +140,7 @@ class CLI:
 
     #Called in separate thread when song ends
     def end_callback(self, event):
-        print("End of song. Please type a new command (\'>\' for next song in playlist or \'n\' to enter a new song")
+        print("End of song. Please type a new command (\'>\' for next song in playlist or \'n\' to enter a new song)")
 
     def quit_app(self):
         """Stop and exit"""
@@ -138,6 +148,7 @@ class CLI:
 
     def play_song(self, song):
         self.song = song
+        self.nextSongPath = song.file
 
         try:
             media = self.instance.media_new(song.file)

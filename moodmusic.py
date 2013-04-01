@@ -1,5 +1,5 @@
 #! /usr/bin/python
-# A simple test class for cli.py
+# Runs MoodMusic
 # Usage: ./test_cli.py path/to/song.mp3
 
 from ui.cli import *
@@ -8,8 +8,10 @@ from song.song import Song
 def run(songPath):
     
     myCLI = CLI()
-    mySong = Song(songPath)
+    mySong = Song.song_from_filepath(songPath)
     myCLI.play_song(mySong)
+
+    
 
 if __name__ == '__main__':
     if sys.argv[1:] and sys.argv[1] not in ('-h', '--help'):

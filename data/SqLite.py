@@ -75,10 +75,10 @@ class SqLite(object):
         if "id" in params:
             del params["id"]
         
-        sql = "CREATE TABLE IF NOT EXISTS " + self.__quote_identifier(name) + " ("
+        sql = "CREATE TABLE IF NOT EXISTS " + C.quote_identifier(name) + " ("
         sql += "\"id\" INTEGER PRIMARY KEY, "
         for field_name, field_type in params.items():
-            sql += self.__quote_identifier(field_name) + " " + field_type + ","
+            sql += C.quote_identifier(field_name) + " " + field_type + ","
         sql = sql[0:-1] + ")"
         
         result = self.runQuery(sql)
@@ -88,26 +88,26 @@ class SqLite(object):
         
         return result
     
-    def hasNamespace(self):
+    def hasNamespace(self, name):
         '''
         Checks if the namespace exists in the backend
         '''
         sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
         
         cursor = self.__connection.cursor()
-        cursor.execute(sql, [self.getNamespace()])
+        cursor.execute(sql, [name])
         
         if cursor.fetchall():
             return True
         else:
             return False
         
-    def removeNamespace(self):
+    def removeNamespace(self, name):
         '''
         Removes the current namespace.
         @warning: this operation removes all the data and is not reversable
         '''
-        sql = "DROP TABLE IF EXISTS " + self.__quote_identifier(self.getNamespace())
+        sql = "DROP TABLE IF EXISTS " + C.quote_identifier(name)
         
         return self.runQuery(sql)
         
@@ -164,9 +164,9 @@ class SqLite(object):
         '''
         Creates an INSERT SQL statement
         '''
-        field_names = map(self.__quote_identifier, field_names)
+        field_names = map(C.quote_identifier, field_names)
         
-        sql = "INSERT INTO " + self.__quote_identifier(self.getNamespace()) + " ("
+        sql = "INSERT INTO " + C.quote_identifier(self.getNamespace()) + " ("
         sql += ", ".join(field_names) + " ) VALUES ( "
         sql += ", ".join("?" for i in range(len(field_names))) + " ) "
         
@@ -179,7 +179,7 @@ class SqLite(object):
         @return Void
         '''
         
-        sql = "SELECT * FROM " + self.__quote_identifier(self.getNamespace()) + ""
+        sql = "SELECT * FROM " + C.quote_identifier(self.getNamespace()) + ""
         
         if cond:
             sql += " WHERE " + cond
@@ -212,8 +212,8 @@ class SqLite(object):
         '''
         Delete an item based on its id
         '''
-        sql = "DELETE FROM " + self.__quote_identifier(self.getNamespace()) + " WHERE "
-        sql += self.__quote_identifier(str(self.getIdField())) + " = ?"
+        sql = "DELETE FROM " + C.quote_identifier(self.getNamespace()) + " WHERE "
+        sql += C.quote_identifier(str(self.getIdField())) + " = ?"
         
         return self.runQuery(sql, [item_id])
     
@@ -225,26 +225,12 @@ class SqLite(object):
         cursor = self.__connection.cursor()
         
         for item_id in ids:
-            sql = "DELETE FROM " + self.__quote_identifier(self.getNamespace()) + " WHERE "
-            sql += self.__quote_identifier(str(self.getIdField())) + " = ?"
+            sql = "DELETE FROM " + C.quote_identifier(self.getNamespace()) + " WHERE "
+            sql += C.quote_identifier(str(self.getIdField())) + " = ?"
         
             cursor.execute(sql, [item_id])
         
         return self.__connection.commit()
-    
-    def __quote_identifier(self, s, errors="replace"):
-        encodable = s.encode("utf-8", errors).decode("utf-8")
-    
-        nul_index = encodable.find("\x00")
-    
-        if nul_index >= 0:
-            error = UnicodeEncodeError("NUL-terminated utf-8", encodable,
-                                       nul_index, nul_index + 1, "NUL not allowed")
-            error_handler = codecs.lookup_error(errors)
-            replacement, _ = error_handler(error)
-            encodable = encodable.replace("\x00", replacement)
-    
-        return "\"" + encodable.replace("\"", "\"\"") + "\""
 
 class C(object):
     '''
@@ -272,7 +258,7 @@ class C(object):
         Returns a basic SQL equation.
         example: `title` = 'Album'
         '''
-        return "`" + field + "` " + operator + " '" + str(value) + "'"
+        return C.quote_identifier(field) + " " + operator + " " + C.quote_value(str(value))
     
     @staticmethod
     def _raw(field, operator, value):
@@ -280,4 +266,43 @@ class C(object):
         Returns a basic SQL equation with an unquoted value
         example: _raw('id', 'IN', '(1,2,3)') = '`id` IN (1,2,3)'
         '''
-        return "`" + field + "` " + operator + " " + str(value) + ""
+        return C.quote_identifier(field) + " " + operator + " " + str(value)
+    
+    @staticmethod
+    def quote_identifier(s, errors="replace"):
+        '''
+        SqLite does not provide an identifier sanitizer so we use this method
+        '''
+        encodable = s.encode("utf-8", errors).decode("utf-8")
+    
+        nul_index = encodable.find("\x00")
+    
+        if nul_index >= 0:
+            error = UnicodeEncodeError("NUL-terminated utf-8", encodable,
+                                       nul_index, nul_index + 1, "NUL not allowed")
+            error_handler = codecs.lookup_error(errors)
+            replacement, _ = error_handler(error)
+            encodable = encodable.replace("\x00", replacement)
+    
+        return "\"" + encodable.replace("\"", "\"\"") + "\""
+    
+    @staticmethod
+    def quote_value(s, errors="replace"):
+        '''
+        SqLite does not provide a escape string function and only supports parameter
+        bindings which in case of condition construction will require a change in
+        the structure of the classes. It is still necessary to switch to the binding
+        method but for now this should work.
+        '''
+        encodable = s.encode("utf-8", errors).decode("utf-8")
+    
+        nul_index = encodable.find("\x00")
+    
+        if nul_index >= 0:
+            error = UnicodeEncodeError("NUL-terminated utf-8", encodable,
+                                       nul_index, nul_index + 1, "NUL not allowed")
+            error_handler = codecs.lookup_error(errors)
+            replacement, _ = error_handler(error)
+            encodable = encodable.replace("\x00", replacement)
+    
+        return "'" + encodable.replace("'", "''") + "'"
