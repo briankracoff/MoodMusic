@@ -75,11 +75,12 @@ class DB_Helper(object):
         #Get songdata from DB with hash
         self.db.search() 
         songData = self.db.read()
-
+        
         #Removes id and hash
-        for song in songData:
-            song.pop(commonId, None)
-            song.pop(commonHash, None)
+        for i,song in enumerate(songData):
+            # song.pop(commonId, None)
+            print song
+            songData[i] = song[1:]
 
         return songData
 
