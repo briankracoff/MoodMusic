@@ -10,12 +10,15 @@ class DB_Helper(object):
     #Singleton pattern
     _instance = None
     def __new__(cls, *args, **kwargs):
-        if not cls._instance:
+        if True in args:
+            return super(DB_Helper, cls).__new__(
+                            cls, *args, **kwargs)
+        elif not cls._instance:
             cls._instance = super(DB_Helper, cls).__new__(
                                 cls, *args, **kwargs)
         return cls._instance
 
-    def __init__(self):
+    def __init__(self, new = False):
         self.db = SqLite();
 
     #Returns a dictionary of attributes for a song's filepath

@@ -47,7 +47,7 @@ class Song:
             return attributes
         else:
             #Use echonest if no entry in db
-            return {'test1':'value', 'test2':5}
+            return {'No data in DB for this song':'it hasn\'t been imported yet'}
 
     @staticmethod
     def _file_from_path(filePath):
