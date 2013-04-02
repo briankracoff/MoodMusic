@@ -78,8 +78,6 @@ class DB_Helper(object):
         
         #Removes id and hash
         for i,song in enumerate(songData):
-            # song.pop(commonId, None)
-            print song
             songData[i] = song[1:]
 
         return songData
