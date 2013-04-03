@@ -3,14 +3,16 @@
 import myconfig
 
 import time
-from pyechonest import song, config
+from pyechonest import song, config # the echonest python API
 
 config.ECHO_NEST_API_KEY=myconfig.ECHO_NEST_API_KEY
 
-## Returns a song's audio features, including:
-## mode, tempo, key, duration, time signature, loudness, danceability, energy
-## Returns the dictionary of song attributes, or an empty dictionary if there was an error
 def get_features(songArtist = '', songTitle = ''):
+    '''
+    Returns a song's audio features, including:
+    mode, tempo, key, duration, time signature, loudness, danceability, energy
+    Returns the dictionary of song attributes, or an empty dictionary if there was an error
+    '''
 
     if songArtist == '' or songTitle == '':
         return {};
@@ -28,6 +30,13 @@ def get_features(songArtist = '', songTitle = ''):
     return {}
 
 def read_song():
+    '''
+    @deprecated: We now read the files using the importer mechanism
+                 This function was for testing purpose only
+    
+    Read a Library.xml file and returns meta-data about files using
+    the echonest service
+    '''
     infile = open('Library.xml')
     outfile = open('output.xls', 'w+')
 

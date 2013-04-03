@@ -25,17 +25,17 @@ class Importer(object):
         Tries to detect library type and import it
         '''
         
-        if os.path.isfile(path):
-            if os.path.splitext(path)[1].lower() == "xml":
+        if os.path.isfile(path): # is the a file ?
+            if os.path.splitext(path)[1].lower() == "xml": # iTunes ?
                 lib = iTunes.Input(max_files)
                 self.__files = lib.Import({"xml_path": path})
-            else:
+            else: # probably a music file
                 self.__files = [path]
-        else:
+        else: # a directory, import all music files
             lib = Filesystem.Input(max_files)
             self.__files = lib.Import({"path":path})
         
-        if self.__files is False:
+        if self.__files is False: # importing failed, no files, or permission
             self.__files = []
             
     def startDaemon(self):
@@ -49,14 +49,17 @@ class Importer(object):
         '''
         This is called to fetch song data
         '''
+        
+        # print the number of files, used to create progress bar
         print (str(len(self.__files)))
         stdout.flush()
-        db = DB_Helper(True)
+        
+        db = DB_Helper(True) # create a new database instance
         
         for song in self.__files:
             song_attributes(song, False, db)
-            print("#")
-            stdout.flush()
+            print("#") # print a # for each file that is completed
+            stdout.flush() # flush to have live output in the other process
     
     def isAlive(self):
         '''
@@ -95,6 +98,9 @@ class FetchData(threading.Thread):
         self.runnable()
     
     def subprocess(self):
+        '''
+        Runs ./importer.py and updates the progress
+        '''
         self.process = {"total":0, "done":0}
         proc = subprocess.Popen(['python', './importer.py'], stdout=subprocess.PIPE, bufsize=1)
         

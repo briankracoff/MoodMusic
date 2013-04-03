@@ -37,7 +37,7 @@ class Input(object):
         files = []
         with open(path) as f:
             for line in f:
-                if self.__max_size < 1:
+                if self.__max_size < 1: # did we hit the max ?
                     break
                 
                 line = line.strip()
@@ -45,8 +45,10 @@ class Input(object):
                     match = re.search("<string>(.*?)</string>", line)
                     
                     if match is not None:
+                        # we need to change the location from file://url/to/file
+                        # to an absolute path
                         p = urlparse.urlparse(match.group(1))
-                        match = urllib.unquote(os.path.abspath(os.path.join(p.netloc, p.path))) 
+                        match = urllib.unquote(os.path.abspath(os.path.join(p.netloc, p.path)))
                         
                         files.append(match)
                         self.__max_size -= 1
