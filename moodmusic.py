@@ -4,14 +4,14 @@
 
 from ui.cli import *
 from song.song import Song
-from input.Import import *
-import myconfig
+#import myconfig
+
+from input.Import import FetchData
 
 def run(songPath):
-    #Start background thread importer
-    importer = Importer(myconfig.MUSIC_LIBRARY_FILE_PATH, 100)
-    importer.startDaemon()
-
+    daemon = FetchData()
+    daemon.start()
+    
     #Start CLI
     application = CLI()
     mySong = Song.song_from_filepath(songPath)
