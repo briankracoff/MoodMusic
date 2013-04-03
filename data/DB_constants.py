@@ -1,4 +1,6 @@
-#! /usr/bin/python
+'''
+Database fields and their types
+'''
 
 #Common keys
 commonId = "id"
