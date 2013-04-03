@@ -2,13 +2,16 @@
 
 from data.DB_Helper import *
 import os
-from myconfig import *
 import math
+from config import *
 
 from pyechonest import config as pyechonest_config
 from pyechonest.track import track_from_file
 
-pyechonest_config.ECHO_NEST_API_KEY=ECHO_NEST_API_KEY
+#Sets the EchoNest api Key
+#MUST be called before EchoNest can be used
+def set_api_key(apiKey):
+    pyechonest_config.ECHO_NEST_API_KEY = Config().get_attr('ECHO_NEST_API_KEY')
 
 ## function to read a whole library into the DB
 ## takea a path as an argument

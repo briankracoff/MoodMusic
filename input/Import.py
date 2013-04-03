@@ -55,8 +55,8 @@ class Importer(object):
         
         for song in self.__files:
             song_attributes(song, False, db)
-            print("#")
-            stdout.flush()
+            #print("#")
+            #stdout.flush()
     
     def isAlive(self):
         '''

@@ -27,7 +27,8 @@ class Song:
     @staticmethod
     #Gets moods from DB
     def _find_moods(filepath):
-        return DB_Helper().moods_for_filepath(filepath)
+        return [];
+        #return DB_Helper().moods_for_filepath(filepath)
 
     #User adds mood to DB
     def add_mood(self, newMood):
