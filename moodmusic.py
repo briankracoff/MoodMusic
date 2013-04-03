@@ -11,7 +11,6 @@ from config import *
 
 from input.Import import FetchData
 
-<<<<<<< HEAD
 #Returns a list of attributes
 def __get_attribute_schema():
     return [
@@ -134,6 +133,13 @@ def run():
 
     if not os.path.isfile('config.pkl'):
         __first_time()
+
+    #Starts background daemon
+    daemon = FetchData()
+    daemon.start()
+
+    #Start CLI
+    application = CLI(daemon)
 
     print "\nPlease choose an option:\n"
     print "a -> Enter song to play"
