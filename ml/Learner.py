@@ -7,7 +7,7 @@ import cPickle as cp
 
 # KERNEL = 'gamma'     # fully connected, dense matrix, expensive
                        # mem+time
-KERNEL = 'n_neighbors' # sparse matrix, not as expensive
+KERNEL = 'knn'         # sparse matrix, not as expensive
 
 class Learner:
     
@@ -43,16 +43,17 @@ class Learner:
 
     def _convert_int_to_mood(self, arr):
         ''' represent ints as mood strings '''
-        return [self._intToMood.get(i, -1) for i in arr.tolist()]
+        return [self._intToMood.get(i, -1) for i in xrange(arr.shape[1])]
 
     def _convert_mood_to_int(self, arr):
         ''' represent moods as ints -- unassigned is -1 '''
-        return [self._moodToInt.get(i, -1) for i in arr.tolist()]
+        return [self._moodToInt.get(i, -1) for i in arr]
 
     def _normalize(self, arr):
         ''' perform normalization routine on attributes ''' 
         for i in xrange(arr.shape[1]):
             arr[:,i] = (arr[:,i] - nanmean(arr[:,i])) / nanstd(arr[:,i])
+        arr = np.nan_to_num(arr)
         return arr
 
     def save(self, path):

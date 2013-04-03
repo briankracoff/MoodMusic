@@ -57,11 +57,10 @@ class DB_Helper(object):
         self.db.search()
         rawMoods = self.db.read()
 
-        moods = []
-        for rawMood in rawMoods:
-            moods.append(rawMood[moodTitle])
+        for i,rawMood in enumerate(rawMoods):
+            rawMoods[i] = tuple([int(rawMood[1])])+rawMood[2:]
 
-        return moods
+        return rawMoods
 
     #Adds the given mood for the song's filepath
     def add_mood(self, filepath, title):
@@ -81,10 +80,10 @@ class DB_Helper(object):
         
         #Removes id and hash
         for i,song in enumerate(songData):
-            songData[i] = song[1:]
-
+            songData[i] = tuple([int(song[16])])+song[1:10]+song[11:16]+song[17:27]+song[28:-1]
+            
         return songData
-
+        
     #Get the song with the given hash
     def get_song(self, filepath):
         songHash = DB_Helper._hash(filepath)

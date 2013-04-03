@@ -14,15 +14,15 @@ class Playlist:
 
     def add_mood(self, mood):
         ''' add mood classifier to playlist '''
-        self.moods.append(mood)
+        self._moods.append(mood)
 
     def add_moods(self, moods):
         ''' add a batch of mood classifiers to playlist '''
-        self.moods += moods
+        self._moods += moods
 
     def reset_mood(self):
         ''' reset mood classifiers at work here '''
-        self.moods = []
+        self._moods = []
 
     def _get_songs_and_moods(self, songs=None, moods=None):
         ''' 
@@ -56,11 +56,12 @@ class Playlist:
         
         self._compute_model(songs, moods)
 
-        header, categs = categorize_songs_probab(songs, moods)
+        header, categs = self._generator.categorize_songs_probab(songs)
+
         moodsIndices = [header.index(m) for m in self._moods]
         mergeCats = [sum([x[i] for i in moodsIndices])/len(moodsIndices) 
                      for x in categs]
-        songsProbs = [hashes[i] for i,x in enumerate(mergeCats) if x > .6]
+        self._list = [hashes[i] for i,x in enumerate(mergeCats) if x > .6]
         shuffle(self._list)
 
     def _get_mood_list(self, songs, moods):
