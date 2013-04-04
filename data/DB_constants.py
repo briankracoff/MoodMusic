@@ -1,4 +1,7 @@
-#! /usr/bin/python
+# Author: Brian Kracoff
+'''
+Database fields and their types
+'''
 
 #Common keys
 commonId = "id"

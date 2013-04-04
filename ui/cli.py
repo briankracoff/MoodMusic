@@ -1,5 +1,5 @@
 #! /usr/bin/python
-#
+# Author: Brian Kracoff
 # A command-line interface using vlc's engine
 # To use, create a new CLI object and use cliObject.play_song(fileName)
 
@@ -19,7 +19,8 @@ except ImportError:
     import tty
 
 class CLI:
-    def __init__(self):
+    def __init__(self, daemon):
+        self.daemon = daemon
         self.echo_position = False
         self.instance = Instance("--sub-source marq")
         self.player = self.instance.media_player_new()
@@ -34,11 +35,16 @@ class CLI:
         self.keybindings.setdefault(' ', self.player.pause)
         self.keybindings.setdefault('m', self.add_to_mood)
         self.keybindings.setdefault('i', self.print_info)
+        self.keybindings.setdefault('d', self.print_daemon_info)
         self.keybindings.setdefault('p', self.toggle_echo_position)
         self.keybindings.setdefault('n', self.play_different_track)
         self.keybindings.setdefault('>', self.next_track)
         self.keybindings.setdefault('q', self.quit_app)
         self.keybindings.setdefault('?', self.print_menu)
+
+    def print_daemon_info(self):
+        """Print status about the song importer"""
+        print('Songs imported: %i' % self.daemon.process['done'])
 
     def pos_callback(self, event):
         if self.echo_position:

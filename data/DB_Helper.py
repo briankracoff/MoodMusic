@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# Author: Brian Kracoff
 # Helper class for the DB methods
 # Usage: DB_Helper().method, since it is a singleton class
 

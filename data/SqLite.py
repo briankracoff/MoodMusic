@@ -39,7 +39,7 @@ class SqLite(object):
         
         self.__connection = sqlite3.connect(db_path)
         
-        self.__connection.row_factory = sqlite3.Row
+        self.__connection.row_factory = sqlite3.Row 
     
     def setNamespace(self, namespace, id_field = "id"):
         '''
