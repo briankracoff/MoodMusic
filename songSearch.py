@@ -1,3 +1,11 @@
+## This function takes user input to search the default library for a specified
+### song
+## Returns the local filepath of the closest match found
+
+## This search is primitve:
+### It simply looks for the two strings you provided in the filepath, independent
+### of order and which one is actually the Artist or Song title
+
 import os
 from myconfig import *
 
