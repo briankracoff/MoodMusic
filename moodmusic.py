@@ -103,7 +103,7 @@ def __make_config_file():
     musicLibraryFilePath = raw_input('Enter your music library file path: ')
 
     #Makes sure file exists
-    while not os.path.isfile(musicLibraryFilePath):
+    while not os.path.isfile(musicLibraryFilePath) or os.path.isdir(musicLibraryFilePath):
         musicLibraryFilePath = raw_input('Please enter a valid music library file path: ')
 
     # Makes config file
