@@ -10,6 +10,8 @@ from data.SqLite import *
 from data.DB_Helper import *
 from config import *
 
+from ml.Playlist import Playlist
+
 from input.Import import FetchData
 
 #Returns a list of attributes
@@ -142,10 +144,13 @@ def run():
     #Start CLI
     application = CLI(daemon)
 
+    #Init Database Chatter
+    db = DB_Helper()
+
     print "\nPlease choose an option:\n"
     print "a -> Enter song to play"
 
-    moods = []#DB_Helper().all_moods()
+    moods = db.all_moods()
     if len(moods) > 0:
         print "b -> Enter mood to play"
 
@@ -155,21 +160,32 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
+        p = Playlist(db, moods)
+
         songFile = raw_input('Enter song file: ')
         mySong = Song.song_from_filepath(songFile)
         application.play_song(mySong)
+
+        p.generate_list_song(db._hash(songFile))
+
+        
     elif choice == 'b':
         #User enters a mood
         print "Choose a mood from the options below:"
         for mood in moods:
             print mood
-        application.play_song(mySong)
 
         chosenMood = raw_input('Enter choice: ')
         while chosenMood not in moods:
             chosenMood = raw_input('Please enter one of the options above: ')
 
-        songFile = ''
+        # make playlist
+        p = Playlist(db, moods)
+        p.add_mood(chosenMood)
+        p.generate_list_mood()
+
+        songFile = p.get_current_song()
+        
         mySong = Song.song_from_filepath(songFile)
         application.play_song(mySong)
 

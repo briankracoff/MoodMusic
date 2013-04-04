@@ -1,8 +1,15 @@
+
 from Learner import Learner
 from random import shuffle
 import numpy as np
 
+from data.DB_constants import *
+
 class Playlist:
+
+    _excludeSongs = [commonHash, commonId, songFilePath['name'], 
+                     songTitle['name'], songArtist['name']]
+    _excludeMoods = [commonHash, commonId]
     
     def __init__(self, dbHelp, moods):
         ''' construct playlist object '''
@@ -33,9 +40,10 @@ class Playlist:
         if songs == None:
             songs = self._db.all_songs()
         if moods == None:
-            moods = self._db.all_moods()
+            moods = self._db.all_song_moods()
 
-        songs = np.array(songs)
+        songs = np.array(self._prune(songs, Playlist._excludeSongs))
+        moods = self._prune(moods, Playlist._excludeMoods)
 
         moods = self._get_mood_list(songs, moods)
         hashes = songs[:,0]
@@ -43,26 +51,74 @@ class Playlist:
         
         return hashes, songs, moods
 
-    def _compute_model(self, songs, moods):
+    def _prune(self, stuff, exclude):
+        newStuff = []
+        for row in stuff:
+            newRow = [row[commonHash]]
+            for item in row.keys():
+                if item not in exclude:
+                    newRow.append(row[item])
+            newStuff.append(newRow)
+        return newStuff
+
+    def _compute_model(self):
         ''' compute the model of given songs with their ratings '''
+        hashes, songs, moods = self._get_songs_and_moods()
+
+        if len(hashes) == 0 or all(x == -1 for x in moods):
+            print ("Must have songs in database and assign at "
+                   "least one song to a mood.")
+            return [], [], []
         self._generator.model_songs(songs, moods)
 
-    def generate_list(self):
+        return hashes, songs, moods
+
+    def generate_list_mood(self):
         ''' 
         generate a playlist after computing a model of the 
         songs and mood assignments currently in the db
         '''
-        hashes, songs, moods = self._get_songs_and_moods()
-        
-        self._compute_model(songs, moods)
+        hashes, songs, moods = self._compute_model()
+        if len(hashes) == 0:
+            return 
 
         header, categs = self._generator.categorize_songs_probab(songs)
 
         moodsIndices = [header.index(m) for m in self._moods]
         mergeCats = [sum([x[i] for i in moodsIndices])/len(moodsIndices) 
                      for x in categs]
-        self._list = [hashes[i] for i,x in enumerate(mergeCats) if x > .6]
-        shuffle(self._list)
+        self._to_list([hashes[i] for i,x in enumerate(mergeCats) if x > .6])
+
+    def generate_list_song(self, kernelsong):
+        '''
+        generates playlist based on a given song
+        '''
+        hashes, songs, moods = self._compute_model()
+        if len(hashes) == 0:
+            return 
+
+        header, categs = self._generator.categorize_songs_probab(songs)
+
+        i = hashes.index(kernelsong)
+        kernelish = categs[i]
+        self._to_list([hashes[i] for i,x in enumerate(categs) 
+                       if self._similar(x, kernelish)])
+
+    def _similar(self, one, two):
+        '''decides if two same-length lists are similar'''
+        avgDiff = sum([abs(two[i] - x) for i,x in enumerate(one)])
+        avgDiff = avgDiff/len(one)
+         
+        return avgDiff < .15
+
+    def _to_list(self, songs):
+        '''converts list of hashes to list of filepaths'''
+        files = []
+        for x in songs:
+            files.append(self._db.hash_to_file(x))
+            
+        shuffle(files)
+        self._list = files
 
     def _get_mood_list(self, songs, moods):
         ''' 

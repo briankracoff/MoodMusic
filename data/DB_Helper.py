@@ -50,8 +50,8 @@ class DB_Helper(object):
 
         return moods
 
-    #Returns all the moods that the user has created
-    def all_moods(self):
+    #Returns all songs assigned moods and their assigned mood
+    def all_song_moods(self):
         self.db.setNamespace(moodNamespace)
 
         #Get moods from DB with hash
@@ -59,6 +59,20 @@ class DB_Helper(object):
         rawMoods = self.db.read()
 
         return rawMoods
+
+    # get list of moods used by user
+    def all_moods(self):
+        self.db.setNamespace(moodNamespace)
+
+        #Get moods from DB with hash
+        self.db.search()
+        rawMoods = self.db.read()
+
+        ms = []
+        for m in rawMoods:
+            ms.append(m[moodTitle])
+
+        return list(set(ms))
 
     # get filepath from hash
     def hash_to_file(self, h):
