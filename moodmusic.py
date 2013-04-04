@@ -1,6 +1,7 @@
 #! /usr/bin/python
-# Runs MoodMusic
-# Usage: ./test_cli.py path/to/song.mp3
+# Author: Brian Kracoff
+# Runs the main program for MoodMusic
+# Usage: ./moodmusic.py
 
 from ui.cli import *
 from song.song import Song
