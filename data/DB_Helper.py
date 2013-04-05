@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# Author: Brian Kracoff
 # Helper class for the DB methods
 # Usage: DB_Helper().method, since it is a singleton class
 
@@ -49,7 +50,17 @@ class DB_Helper(object):
 
         return moods
 
-    #Returns all the moods that the user has created
+    #Returns all songs assigned moods and their assigned mood
+    def all_song_moods(self):
+        self.db.setNamespace(moodNamespace)
+
+        #Get moods from DB with hash
+        self.db.search()
+        rawMoods = self.db.read()
+
+        return rawMoods
+
+    # get list of moods used by user
     def all_moods(self):
         self.db.setNamespace(moodNamespace)
 
@@ -57,11 +68,21 @@ class DB_Helper(object):
         self.db.search()
         rawMoods = self.db.read()
 
-        moods = []
-        for rawMood in rawMoods:
-            moods.append(rawMood[moodTitle])
+        ms = []
+        for m in rawMoods:
+            ms.append(m[moodTitle])
 
-        return moods
+        return list(set(ms))
+
+    # get filepath from hash
+    def hash_to_file(self, h):
+        self.db.setNamespace(songNamespace)
+        
+        self.db.search(C._raw(commonHash, '=', str(h)))
+        result = self.db.read()
+        
+        # get filepath
+        return result[0][songFilePath]
 
     #Adds the given mood for the song's filepath
     def add_mood(self, filepath, title):
@@ -78,13 +99,9 @@ class DB_Helper(object):
         #Get songdata from DB with hash
         self.db.search() 
         songData = self.db.read()
-        
-        #Removes id and hash
-        for i,song in enumerate(songData):
-            songData[i] = song[1:]
-
+                    
         return songData
-
+        
     #Get the song with the given hash
     def get_song(self, filepath):
         songHash = DB_Helper._hash(filepath)

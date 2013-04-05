@@ -1,5 +1,5 @@
 #! /usr/bin/python
-#
+# Author: Brian Kracoff
 # A command-line interface using vlc's engine
 # To use, create a new CLI object and use cliObject.play_song(fileName)
 
