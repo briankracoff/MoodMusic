@@ -12,7 +12,7 @@ class Input(object):
     Read user library from a path and import all songs
     '''
     
-    __extensions = ['.mp3','.m4a']
+    __extensions = ['.mp3','.m4a', 'm4p']
     __files = []
 
     def __init__(self, max_size):
@@ -51,8 +51,7 @@ class Input(object):
         '''
         Imports a single file, if it exists and its readable
         '''
-        if os.access(file_path, os.F_OK | os.R_OK) and \
-        os.path.splitext(file_path)[1] in self.__extensions:
+        if os.access(file_path, os.F_OK | os.R_OK) and os.path.splitext(file_path)[1] in self.__extensions:
             self.__files.append(file_path)
             self.__max_size -= 1
             
