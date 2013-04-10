@@ -207,7 +207,7 @@ def __initialize_DB():
     print "Done with DB setup!\n"
 
 def __make_config_file():
-    apiKey = raw_input('Enter your EchoNest API Key: ')
+    apiKey = raw_input('Enter your EchoNest API Key (if you don\'t have one, use YNBJILDXWEZ6LGWLG: ')
     musicLibraryFilePath = raw_input('Enter your music library file path: ')
 
     #Makes sure file exists
