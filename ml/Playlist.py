@@ -99,7 +99,7 @@ class Playlist:
 
         header, categs = self._generator.categorize_songs_probab(songs)
 
-        i = hashes.index(kernelsong)
+        i = list(hashes).index(str(kernelsong))
         kernelish = categs[i]
         self._to_list([hashes[i] for i,x in enumerate(categs) 
                        if self._similar(x, kernelish)])

@@ -82,7 +82,7 @@ class DB_Helper(object):
         result = self.db.read()
         
         # get filepath
-        return result[0][songFilePath]
+        return result[0][songFilePath['name']]
 
     #Adds the given mood for the song's filepath
     def add_mood(self, filepath, title):
