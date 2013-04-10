@@ -276,11 +276,8 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
-<<<<<<< HEAD
         p = Playlist(db, moods)
 
-=======
->>>>>>> parent of a4cfc74... Merge branch 'master' of https://github.com/briankracoff/MoodMusic
         songFile = raw_input('Enter song file: ')
 
         p.generate_list_song(db._hash(songFile))
