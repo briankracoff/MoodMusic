@@ -93,10 +93,7 @@ def get_attr(fp, pathstring, db):
     thispitchratiob = [None, None, None, None, None, None, None, None, None, None, None, None]
     
 <<<<<<< HEAD
-<<<<<<< HEAD
 =======
-=======
->>>>>>> parent of 3d59935... cleanup garbage
 ##    thistimbre1average = None
 ##    thistimbre1dev = None
 ##    thistimbre1diff = None
@@ -193,10 +190,7 @@ def get_attr(fp, pathstring, db):
 ##    thispitch10ratiob = None
 ##    thispitch11ratiob = None
 ##    thispitch12ratiob = None
-<<<<<<< HEAD
 >>>>>>> parent of a4cfc74... Merge branch 'master' of https://github.com/briankracoff/MoodMusic
-=======
->>>>>>> parent of 3d59935... cleanup garbage
         
     if hasattr(track, 'beats') and len(track.beats) > 0:
         beatsavg = get_average(track.beats, 'duration')
