@@ -19,30 +19,12 @@ except ImportError:
     import tty
 
 class CLI:
-    def __init__(self, daemon):
+    def __init__(self, daemon=None):
         self.daemon = daemon
         self.echo_position = False
         self.instance = Instance("--sub-source marq")
-        self.player = self.instance.media_player_new()
 
-        self.playlist = None
-
-        #Event callbacks for end of song and for getting the position of the song
-        event_manager = self.player.event_manager()
-        event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
-        event_manager.event_attach(EventType.MediaPlayerPositionChanged, self.pos_callback)
-
-        #Constant keybindings for menu
-        self.keybindings = OrderedDict()
-        self.keybindings.setdefault(' ', self.player.pause)
-        self.keybindings.setdefault('m', self.add_to_mood)
-        self.keybindings.setdefault('i', self.print_info)
-        self.keybindings.setdefault('d', self.print_daemon_info)
-        self.keybindings.setdefault('p', self.toggle_echo_position)
-        self.keybindings.setdefault('n', self.play_different_track)
-        self.keybindings.setdefault('>', self.next_track)
-        self.keybindings.setdefault('q', self.quit_app)
-        self.keybindings.setdefault('?', self.print_menu)
+        self.playlist = None        
 
     def set_list(self, p):
         self.playlist = p
@@ -95,14 +77,14 @@ class CLI:
     #Go to next track in playlist
     def next_track(self):
         """Go to next track in playlist"""
-        song = Song.song_from_filepath(self.nextSongPath)
-        self.play_song(song)
+        self.play_song(self.nextSongPath)
 
     #Open a new track to play
     def play_different_track(self):
         """Play a different track"""
         filePath = raw_input('Enter a file path to a new song: ')
         song = Song.song_from_filepath(filePath)
+        self.playlist = None
         self.play_song(song)
         
     #Add the current track to a user-inputted mood
@@ -166,25 +148,45 @@ class CLI:
         else:
             self.song = song
 
-        if self.playlist.has_next_song():
-            self.nextSongPath = self.playlist.get_next_song()
-        else:
-            self.playlist._currentI = -1
-            self.nextSongPath = self.playlist.get_next_song()
+        if self.playlist:
+            if self.playlist.has_next_song():
+                self.nextSongPath = self.playlist.get_next_song()
+            else:
+                self.playlist._currentI = -1
+                self.nextSongPath = self.playlist.get_next_song()
 
         try:
-            media = self.instance.media_new(song.file)
+            media = self.instance.media_new(self.song.file)
         except NameError:
             print('NameError: %s (%s vs LibVLC %s)' % (sys.exc_info()[1], __version__, libvlc_get_version()))
             sys.exit(1)
 
         #Starts playing media
+        if hasattr(self, 'player'):
+            self.player.stop()
+        self.player = self.instance.media_player_new()
+        event_manager = self.player.event_manager()
+        event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
+        event_manager.event_attach(EventType.MediaPlayerPositionChanged, self.pos_callback)
         self.player.set_media(media)
         self.player.play()
 
+        #Constant keybindings for menu
+        self.keybindings = OrderedDict()
+        self.keybindings.setdefault(' ', self.player.pause)
+        self.keybindings.setdefault('m', self.add_to_mood)
+        self.keybindings.setdefault('i', self.print_info)
+        self.keybindings.setdefault('d', self.print_daemon_info)
+        self.keybindings.setdefault('p', self.toggle_echo_position)
+        self.keybindings.setdefault('n', self.play_different_track)
+        if self.playlist:
+            self.keybindings.setdefault('>', self.next_track)
+        self.keybindings.setdefault('q', self.quit_app)
+        self.keybindings.setdefault('?', self.print_menu)
+
         print('***********************')
         print('Now playing: %s' % bytes_to_str(media.get_mrl()))
-        print('Moods: %s' % song.get_moods())
+        print('Moods: %s' % self.song.get_moods())
         print('Press q to quit, ? to see menu.')
         print('***********************')
 
