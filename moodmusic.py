@@ -208,7 +208,7 @@ def __initialize_DB():
     print "Done with DB setup!\n"
 
 def __make_config_file():
-    apiKey = raw_input('Enter your EchoNest API Key (if you don\'t have one, use YNBJILDXWEZ6LGWLG: ')
+    apiKey = raw_input('Enter your EchoNest API Key: ')
     musicLibraryFilePath = raw_input('Enter your music library file path: ')
 
     #Makes sure file exists
@@ -266,7 +266,6 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
-<<<<<<< HEAD
         p = Playlist(db, moods)
 
         print '\nHow would you like to select a song?\n'
@@ -285,12 +284,6 @@ def run():
             application.play_song()
 
             
-=======
-        songFile = raw_input('Enter song file: ')
-
-        chosenSong = Song.song_from_filepath(songFile)
-        application.play_song(chosenSong)
->>>>>>> 0cdc2215835d1d4b7c98c6f766f4bece3d746ad6
         
     elif choice == 'b':
         #User enters a mood

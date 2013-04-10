@@ -28,6 +28,9 @@ class DB_Helper(object):
 
         #Removes non-attributes
         if songData != None:
+            songData.pop(commonId, None)
+            songData.pop(commonHash, None)
+            songData.pop(songFilePath, None)
             return songData
         else:
             return {}
@@ -79,7 +82,7 @@ class DB_Helper(object):
         result = self.db.read()
         
         # get filepath
-        return result[0][songFilePath['name']]
+        return result[0][songFilePath]
 
     #Adds the given mood for the song's filepath
     def add_mood(self, filepath, title):

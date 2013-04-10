@@ -2,7 +2,6 @@
 from Learner import Learner
 from random import shuffle
 import numpy as np
-from song.song import Song
 
 from data.DB_constants import *
 
@@ -100,7 +99,7 @@ class Playlist:
 
         header, categs = self._generator.categorize_songs_probab(songs)
 
-        i = list(hashes).index(str(kernelsong))
+        i = hashes.index(kernelsong)
         kernelish = categs[i]
         self._to_list([hashes[i] for i,x in enumerate(categs) 
                        if self._similar(x, kernelish)])
@@ -116,7 +115,7 @@ class Playlist:
         '''converts list of hashes to list of filepaths'''
         files = []
         for x in songs:
-            files.append(Song.song_from_filepath(self._db.hash_to_file(x)))
+            files.append(self._db.hash_to_file(x))
             
         shuffle(files)
         self._list = files
