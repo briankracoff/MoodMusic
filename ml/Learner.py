@@ -4,6 +4,7 @@ from scipy.stats import nanmean, nanstd
 
 import numpy as np
 import cPickle as cp
+import warnings as warn
 
 # KERNEL = 'gamma'     # fully connected, dense matrix, expensive
                        # mem+time
@@ -26,7 +27,9 @@ class Learner:
         '''
         data = self._normalize(songs)
         moods = self._convert_mood_to_int(moods)
-        self._model = self._model.fit(data, moods)
+        with warn.catch_warnings():
+            warn.simplefilter("ignore")
+            self._model = self._model.fit(data, moods)
 
     def categorize_songs_single(self, songs):
         ''' produces best fit category for list of songs'''
@@ -51,9 +54,11 @@ class Learner:
 
     def _normalize(self, arr):
         ''' perform normalization routine on attributes ''' 
-        for i in xrange(arr.shape[1]):
-            arr[:,i] = (arr[:,i] - nanmean(arr[:,i])) / nanstd(arr[:,i])
-        arr = np.nan_to_num(arr)
+        with warn.catch_warnings():
+            warn.simplefilter("ignore")
+            for i in xrange(arr.shape[1]):
+                arr[:,i] = (arr[:,i] - nanmean(arr[:,i])) / nanstd(arr[:,i])
+            arr = np.nan_to_num(arr)
         return arr
 
     def save(self, path):

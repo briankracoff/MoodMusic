@@ -19,6 +19,9 @@ class Song:
         self.moods = moods
         self.attr = attributes
 
+    def __str__(self):
+        return self.filepath
+
     @staticmethod
     def song_from_filepath(filepath):
         '''
@@ -76,10 +79,6 @@ class Song:
         
         @note: We can probably skip this step since we use the importer now and
         it check these kinds of stuff
-        '''
-        
+        '''        
         songFile = os.path.expanduser(filePath)
-        if not os.access(songFile, os.R_OK):
-            print('Error: %s file not readable' % songFile)
-            sys.exit(1)
         return songFile

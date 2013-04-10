@@ -88,7 +88,7 @@ class Playlist:
         moodsIndices = [header.index(m) for m in self._moods]
         mergeCats = [sum([x[i] for i in moodsIndices])/len(moodsIndices) 
                      for x in categs]
-        self._to_list([hashes[i] for i,x in enumerate(mergeCats) if x > .6])
+        self._to_list([hashes[i] for i,x in enumerate(mergeCats) if x > .8])
 
     def generate_list_song(self, kernelsong):
         '''
@@ -147,3 +147,7 @@ class Playlist:
     def get_current_song(self):
         ''' return currently playing song '''
         return self._list[self._currentI]
+
+    def get_list(self, length=50):
+        ''' '''
+        return self._list[:length]

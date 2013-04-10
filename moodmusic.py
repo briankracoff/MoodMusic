@@ -258,9 +258,10 @@ def run():
     moods = db.all_moods()
     if len(moods) > 0:
         print "b -> Enter mood to play"
+        print "c -> Generate a playlist from mood (without playing)"
 
     choice = raw_input('\nEnter your choice: ')
-    while(choice not in ['a', 'b']):
+    while(choice not in ['a', 'b', 'c']):
         choice = raw_input('Please enter an option above: ')
 
     if choice == 'a':
@@ -287,6 +288,33 @@ def run():
         application.set_list(p)
 
         application.play_song()
+
+    elif choice == 'c':
+        print "Choose a mood from the options below:"
+        for mood in moods:
+            print mood
+
+        chosenMood = raw_input('Enter choice: ')
+        while chosenMood not in moods:
+            chosenMood = raw_input('Please enter one of the options above: ')
+
+        print "Max length of your playlist: "
+        x = True
+        while x:
+            maxlen = raw_input("> ")
+            try:
+                maxlen = int(maxlen)
+                x = False
+            except:
+                print "Cannot be converted to integer, try again."
+        # make playlist
+        p = Playlist(db, moods)
+        p.add_mood(chosenMood)
+        p.generate_list_mood()
+        
+        for s in p.get_list(maxlen):
+            print str(s)
+
 
 if __name__ == '__main__':
     run()
