@@ -10,7 +10,7 @@ from pyechonest.track import track_from_file
 
 #Sets the EchoNest api Key
 #MUST be called before EchoNest can be used
-def set_api_key(apiKey):
+def set_api_key():
     pyechonest_config.ECHO_NEST_API_KEY = Config().get_attr('ECHO_NEST_API_KEY')
 
 ## function to read a whole library into the DB
@@ -73,6 +73,121 @@ def get_attr(fp, pathstring, db):
     thistimesig = None
     thistimesigcon = None
     thistitle = None
+    thisloudnessmaxaverage = None
+    thisloudnessmaxdeviation = None
+    thisloudnessmaxdifferential = None
+    thisloudnessmaxtimeaverage = None
+    thisloudnessmaxtimedeviation = None
+    thisloudnessmaxtimedifferential = None
+    thisloudnessstartaverage = None
+    thisloudnessstartdeviation = None
+    thisloudnessstartdifferential = None
+
+    thistimbreaverage = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thistimbredev = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thistimbrediff = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thispitchaverage = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thispitchdev = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thispitchdiff = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thispitchratioa = [None, None, None, None, None, None, None, None, None, None, None, None]
+    thispitchratiob = [None, None, None, None, None, None, None, None, None, None, None, None]
+    
+##    thistimbre1average = None
+##    thistimbre1dev = None
+##    thistimbre1diff = None
+##    thistimbre2average = None
+##    thistimbre2dev = None
+##    thistimbre2diff = None
+##    thistimbre3average = None
+##    thistimbre3dev = None
+##    thistimbre3diff = None
+##    thistimbre4average = None
+##    thistimbre4dev = None
+##    thistimbre4diff = None
+##    thistimbre5average = None
+##    thistimbre5dev = None
+##    thistimbre5diff = None
+##    thistimbre6average = None
+##    thistimbre6dev = None
+##    thistimbre6diff = None
+##    thistimbre7average = None
+##    thistimbre7dev = None
+##    thistimbre7diff = None
+##    thistimbre8average = None
+##    thistimbre8dev = None
+##    thistimbre8diff = None
+##    thistimbre9average = None
+##    thistimbre9dev = None
+##    thistimbre9diff = None
+##    thistimbre10average = None
+##    thistimbre10dev = None
+##    thistimbre10diff = None
+##    thistimbre11average = None
+##    thistimbre11dev = None
+##    thistimbre11diff = None
+##    thistimbre12average = None
+##    thistimbre12dev = None
+##    thistimbre12diff = None
+##    thispitch1average = None
+##    thispitch1dev = None
+##    thispitch1diff = None
+##    thispitch2average = None
+##    thispitch2dev = None
+##    thispitch2diff = None
+##    thispitch3average = None
+##    thispitch3dev = None
+##    thispitch3diff = None
+##    thispitch4average = None
+##    thispitch4dev = None
+##    thispitch4diff = None
+##    thispitch5average = None
+##    thispitch5dev = None
+##    thispitch5diff = None
+##    thispitch6average = None
+##    thispitch6dev = None
+##    thispitch6diff = None
+##    thispitch7average = None
+##    thispitch7dev = None
+##    thispitch7diff = None
+##    thispitch8average = None
+##    thispitch8dev = None
+##    thispitch8diff = None
+##    thispitch9average = None
+##    thispitch9dev = None
+##    thispitch9diff = None
+##    thispitch10average = None
+##    thispitch10dev = None
+##    thispitch10diff = None
+##    thispitch11average = None
+##    thispitch11dev = None
+##    thispitch11diff = None
+##    thispitch12average = None
+##    thispitch12dev = None
+##    thispitch12diff = None
+##    thispitch1ratioa = None
+##    thispitch2ratioa = None
+##    thispitch3ratioa = None
+##    thispitch4ratioa = None
+##    thispitch5ratioa = None
+##    thispitch6ratioa = None
+##    thispitch7ratioa = None
+##    thispitch8ratioa = None
+##    thispitch9ratioa = None
+##    thispitch10ratioa = None
+##    thispitch11ratioa = None
+##    thispitch12ratioa = None
+##    thispitch1ratiob = None
+##    thispitch2ratiob = None
+##    thispitch3ratiob = None
+##    thispitch4ratiob = None
+##    thispitch5ratiob = None
+##    thispitch6ratiob = None
+##    thispitch7ratiob = None
+##    thispitch8ratiob = None
+##    thispitch9ratiob = None
+##    thispitch10ratiob = None
+##    thispitch11ratiob = None
+##    thispitch12ratiob = None
         
     if hasattr(track, 'beats') and len(track.beats) > 0:
         beatsavg = get_average(track.beats, 'duration')
@@ -131,6 +246,57 @@ def get_attr(fp, pathstring, db):
     if hasattr(track, 'title'):
         thistitle = str(track)
 
+    if hasattr(track, 'segments'):
+        loudness_maxarray = []
+        loudness_max_timearray = []
+        loudness_startarray = []
+        timbrearrays = [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
+        pitcharrays = [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
+
+        for k in track.segments:
+            loudness_maxarray.append(k['loudness_max'])
+            loudness_max_timearray.append(k['loudness_max_time'])
+            loudness_startarray.append(k['loudness_start'])
+            
+            i = 0
+            while i < 12:
+                timbrearrays[i].append(k['timbre'][i])
+                i += 1
+            i = 0
+            while i < 12:
+                pitcharrays[i].append(k['pitches'][i])
+                i += 1
+
+        avg = get_aver(loudness_maxarray)
+        thisloudnessmaxaverage = avg
+        thisloudnessmaxdeviation = get_devi(loudness_maxarray, avg)
+        thisloudnessmaxdifferential = get_differential(loudness_maxarray)
+        
+        avg = get_aver(loudness_max_timearray)
+        thisloudnessmaxtimeaverage = avg
+        thisloudnessmaxtimedeviation = get_devi(loudness_max_timearray, avg)
+        thisloudnessmaxtimedifferential =  get_differential(loudness_max_timearray)
+        
+        avg = get_aver(loudness_startarray)
+        thisloudnessstartaverage = avg
+        thisloudnessstartdeviation = get_devi(loudness_startarray, avg)
+        thisloudnessstartdifferential = get_differential(loudness_startarray)
+        
+        i = 0
+        while i < 12:
+            avg = get_aver(timbrearrays[i])
+            thistimbreaverage[i] = avg
+            thistimbredev[i] = get_devi(timbrearrays[i], avg)
+            thistimbrediff[i] = get_differential(timbrearrays[i])
+            avg = get_aver(pitcharrays[i])
+            thispitchaverage[i] = avg
+            thispitchdev[i] = get_devi(pitcharrays[i], avg)
+            thispitchdiff[i] = get_differential(pitcharrays[i])
+            thispitchratioa[i] = get_ratio(pitcharrays[i], .5)
+            thispitchratiob[i] = get_ratio(pitcharrays[i], 1)
+            i += 1
+        
+
     
     song = { songFilePath['name']: pathstring,
              songTitle['name']: thistitle,
@@ -161,11 +327,161 @@ def get_attr(fp, pathstring, db):
              songTempo['name']: thistempo,
              songTempoConfidence['name']: thistempoconfidence,
              songTimeSignature['name']: thistimesig,
-             songTimeSignatureConfidence['name']: thistimesigcon}
+             songTimeSignatureConfidence['name']: thistimesigcon,
+             songLoudnessMaxAverage['name']: thisloudnessmaxaverage,
+             songLoudnessMaxDeviation['name']: thisloudnessmaxdeviation,
+             songLoudnessMaxDifferential['name']: thisloudnessmaxdifferential,
+             songLoudnessMaxTimeAverage['name']: thisloudnessmaxtimeaverage,
+             songLoudnessMaxTimeDeviation['name']: thisloudnessmaxtimedeviation,
+             songLoudnessMaxTimeDifferential['name']: thisloudnessmaxtimedifferential,
+             songLoudnessStartAverage['name']: thisloudnessstartaverage,
+             songLoudnessStartDeviation['name']: thisloudnessstartdeviation,
+             songLoudnessStartDifferential['name']: thisloudnessstartdifferential,
+             songTimbre1Average['name']: thistimbreaverage[0],
+             songTimbre1Dev['name']: thistimbredev[0],
+             songTimbre1Diff['name']: thistimbrediff[0],
+             songTimbre2Average['name']: thistimbreaverage[1],
+             songTimbre2Dev['name']: thistimbredev[1],
+             songTimbre2Diff['name']: thistimbrediff[1],
+             songTimbre3Average['name']: thistimbreaverage[2],
+             songTimbre3Dev['name']: thistimbredev[2],
+             songTimbre3Diff['name']: thistimbrediff[2],
+             songTimbre4Average['name']: thistimbreaverage[3],
+             songTimbre4Dev['name']: thistimbredev[3],
+             songTimbre4Diff['name']: thistimbrediff[3],
+             songTimbre5Average['name']: thistimbreaverage[4],
+             songTimbre5Dev['name']: thistimbredev[4],
+             songTimbre5Diff['name']: thistimbrediff[4],
+             songTimbre6Average['name']: thistimbreaverage[5],
+             songTimbre6Dev['name']: thistimbredev[5],
+             songTimbre6Diff['name']: thistimbrediff[5],
+             songTimbre7Average['name']: thistimbreaverage[6],
+             songTimbre7Dev['name']: thistimbredev[6],
+             songTimbre7Diff['name']: thistimbrediff[6],
+             songTimbre8Average['name']: thistimbreaverage[7],
+             songTimbre8Dev['name']: thistimbredev[7],
+             songTimbre8Diff['name']: thistimbrediff[7],
+             songTimbre9Average['name']: thistimbreaverage[8],
+             songTimbre9Dev['name']: thistimbredev[8],
+             songTimbre9Diff['name']: thistimbrediff[8],
+             songTimbre10Average['name']: thistimbreaverage[9],
+             songTimbre10Dev['name']: thistimbredev[9],
+             songTimbre10Diff['name']: thistimbrediff[9],
+             songTimbre11Average['name']: thistimbreaverage[10],
+             songTimbre11Dev['name']: thistimbredev[10],
+             songTimbre11Diff['name']: thistimbrediff[10],
+             songTimbre12Average['name']: thistimbreaverage[11],
+             songTimbre12Dev['name']: thistimbredev[11],
+             songTimbre12Diff['name']: thistimbrediff[11],
+             songPitch1Average['name']: thispitchaverage[0],
+             songPitch1Dev['name']: thispitchdev[0],
+             songPitch1Diff['name']: thispitchdiff[0],
+             songPitch2Average['name']: thispitchaverage[1],
+             songPitch2Dev['name']: thispitchdev[1],
+             songPitch2Diff['name']: thispitchdiff[1],
+             songPitch3Average['name']: thispitchaverage[2],
+             songPitch3Dev['name']: thispitchdev[2],
+             songPitch3Diff['name']: thispitchdiff[2],
+             songPitch4Average['name']: thispitchaverage[3],
+             songPitch4Dev['name']: thispitchdev[3],
+             songPitch4Diff['name']: thispitchdiff[3],
+             songPitch5Average['name']: thispitchaverage[4],
+             songPitch5Dev['name']: thispitchdev[4],
+             songPitch5Diff['name']: thispitchdiff[4],
+             songPitch6Average['name']: thispitchaverage[5],
+             songPitch6Dev['name']: thispitchdev[5],
+             songPitch6Diff['name']: thispitchdiff[5],
+             songPitch7Average['name']: thispitchaverage[6],
+             songPitch7Dev['name']: thispitchdev[6],
+             songPitch7Diff['name']: thispitchdiff[6],
+             songPitch8Average['name']: thispitchaverage[7],
+             songPitch8Dev['name']: thispitchdev[7],
+             songPitch8Diff['name']: thispitchdiff[7],
+             songPitch9Average['name']: thispitchaverage[8],
+             songPitch9Dev['name']: thispitchdev[8],
+             songPitch9Diff['name']: thispitchdiff[8],
+             songPitch10Average['name']: thispitchaverage[9],
+             songPitch10Dev['name']: thispitchdev[9],
+             songPitch10Diff['name']: thispitchdiff[9],
+             songPitch11Average['name']: thispitchaverage[10],
+             songPitch11Dev['name']: thispitchdev[10],
+             songPitch11Diff['name']: thispitchdiff[10],
+             songPitch12Average['name']: thispitchaverage[11],
+             songPitch12Dev['name']: thispitchdev[11],
+             songPitch12Diff['name']: thispitchdiff[11],
+             songPitch1Ratioa['name']: thispitchratioa[0],
+             songPitch2Ratioa['name']: thispitchratioa[1],
+             songPitch3Ratioa['name']: thispitchratioa[2],
+             songPitch4Ratioa['name']: thispitchratioa[3],
+             songPitch5Ratioa['name']: thispitchratioa[4],
+             songPitch6Ratioa['name']: thispitchratioa[5],
+             songPitch7Ratioa['name']: thispitchratioa[6],
+             songPitch8Ratioa['name']: thispitchratioa[7],
+             songPitch9Ratioa['name']: thispitchratioa[8],
+             songPitch10Ratioa['name']: thispitchratioa[9],
+             songPitch11Ratioa['name']: thispitchratioa[10],
+             songPitch12Ratioa['name']: thispitchratioa[11],
+             songPitch1Ratiob['name']: thispitchratiob[0],
+             songPitch2Ratiob['name']: thispitchratiob[1],
+             songPitch3Ratiob['name']: thispitchratiob[2],
+             songPitch4Ratiob['name']: thispitchratiob[3],
+             songPitch5Ratiob['name']: thispitchratiob[4],
+             songPitch6Ratiob['name']: thispitchratiob[5],
+             songPitch7Ratiob['name']: thispitchratiob[6],
+             songPitch8Ratiob['name']: thispitchratiob[7],
+             songPitch9Ratiob['name']: thispitchratiob[8],
+             songPitch10Ratiob['name']: thispitchratiob[9],
+             songPitch11Ratiob['name']: thispitchratiob[10],
+             songPitch12Ratiob['name']: thispitchratiob[11]}
+
  
     ## calls a function to place these attributes in the DB
      # instead, should make this call through the DB abstraction layer
     db.add_song(song)
+
+def get_ratio(array, value):
+    count = 0
+    for k in array:
+        if k >= value:
+            count += 1
+    return float(count)/float(len(array))
+    
+def get_differential(array):
+    if len(array) == 0:
+        return 0
+    else:
+        diffs = []
+        i = 1
+        while i < len(array):
+            diffs.append(array[i] - array[i-1])
+            i += 1
+
+        abssum = 0
+        for k in diffs:
+            abssum += abs(k)
+
+        return float(abssum)/float(len(diffs))
+
+def get_aver(array):
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += k
+        return aggr/len(array)
+    else:
+        return 0
+
+## function to get the standard deviation of a set of values found in a dict
+ # requires that the average is computed first and passed as an argument
+def get_devi(array, average):
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += math.pow((k - average), 2)
+        return math.sqrt(aggr/len(array))
+    else:
+        return 0
+
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
@@ -187,4 +503,4 @@ def get_deviation(array, feature, average):
         return math.sqrt(aggr/len(array))
     else:
         return 0
-    
+
