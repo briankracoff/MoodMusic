@@ -481,4 +481,26 @@ def get_devi(array, average):
         return math.sqrt(aggr/len(array))
     else:
         return 0
-    
+
+
+## function to average a specific set of values found in a dict
+def get_average(array, feature):
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += k[feature]
+        return aggr/len(array)
+    else:
+        return 0
+
+## function to get the standard deviation of a set of values found in a dict
+ # requires that the average is computed first and passed as an argument
+def get_deviation(array, feature, average):
+    if len(array) > 0:
+        aggr = 0
+        for k in array:
+            aggr += math.pow((k[feature] - average), 2)
+        return math.sqrt(aggr/len(array))
+    else:
+        return 0
+
