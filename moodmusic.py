@@ -265,8 +265,6 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
-        p = Playlist(db, moods)
-
         songFile = raw_input('Enter song file: ')
 
         chosenSong = Song.song_from_filepath(songFile)
