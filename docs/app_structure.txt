@@ -1,0 +1,148 @@
+=======================================================================================================================
+Introduction
+=======================================================================================================================
+This is just a draft, execuse the format of the document. I write faster this way. Once we decide on the details I'll
+make a new document in a nicer format (probably PDF).
+
+MetaData:
+Because of all the discusion about using meta data, I though I explain what I meant by it. meta data in the sence used
+in this document is just key-value pair of information about each track. it can be of any nature and from any source.
+Because we are not ceratin about the source of our meta data I'm proposing a plugin system, in which we can use hooks
+in our code to call the meta data generators (Extractors in my terminology) and persist their response in some sort of
+local storage backend.
+
+I though we can think of the project having three main parts:
+1. Reading the library and extracting information
+    This part will basicly handle reading the user library, extracting information from songs and then persisting the
+    data to the backend. we should clearly run this part on different occasions. for example on user request and
+    periodicaly to update the song information and check their existance.
+
+2. AI, Decision making and machine learning
+    This is what we came for ! not sure about the details. we should draft this
+
+3. User Interface
+    Handles the user's input and should display the output. I think its important to abstract this layer so that we
+    are able to change it in future. I'm thinking we can use some sort of interface to implement it.
+
+What is missing:
+  1. your thoughs
+  2. exact data definition of user inputs, the AI and UI parts heavily depend on it
+  3. changing this document to a nicer format
+  4. ... [yours to fill]
+  
+LEGEND:
+    # comments
+    @ part of the application, probably consists of some classes and modules
+    % proposal for an interface to abstract this part, stuff in paranteses are proposed methods of interface
+    + possibly a class or module
+
+=======================================================================================================================
+Reading the library and extracting information
+=======================================================================================================================
+
+@ Library
+  # Holds Items in the library, Items each hold meta data
+  % interface ( checkItems, readBackend, getItems )
+  + Item  :: class that holds info about one item in the library
+      % interface ( getMetaData, addMetaData, getPath, ... )
+
+@ Import
+  # Process in order :
+  #   1. calls reads with options -> gets the list
+  #   2. created Item objects
+  #   3. calls registered extrators, passing Item objects (order mathers, since we should get ID3 to query EchoNest)
+  #   4. Persists library for future use
+  # NOTE: check hash or (title-album-artist) to check if Item exists in library
+
++ Read
+  # Multiple backends, need to register itself (either via config or a plugin system)
+  % interface ( getForm , getFiles )
+  + Filesystem :: read files by scanning file system
+  + iTunes     :: read files by parsing an iTunes library file
+  
++ Extract
+  # Retrieves and appends meta data to an Item, need to register itself ( either via config or a plugin system )
+  % inteface ( getMeta , init )
+  + ID3         :: read meta data store in the files ID3 tag
+  + FingerPrint :: create the files finger print, adds to meta data, read artist and ... if does not exist
+  + EchoNest    :: read meta data from EchoNest
+  + last.fm     :: read meta data from last.fm
+
++ Persist
+  # On Backend at a time, specified in config
+  # Different parts may need different storage requirments so all backends should implement namespace
+  # in SqLite its easy because we have databases. in file we can implement mutiple files
+  % interface (Read, Write, installNamespace, removeNamespace, hasNamespace)
+  + SqLite :: read and write to the extracted data using sqlite
+  + File   :: read and write to the extracted data using files
+  
+=======================================================================================================================
+AI, Decision making and machine learning
+=======================================================================================================================
+
++ PlayList
+  # This part needs a lot of discussion, but basicly, it will receive the library and some inputs from the user and
+  # generates a playlist, it can generate playlist, one song at a time or all at once (on song at a time seems more
+  # appropriate to me)
+  # for now we have decided that we are going to let the user create moods and generate playlist based on those.
+
++ Mood
+  # represents a mood
+  % interface (markItem, unmarkItem, modify, remove, add, getWeights, modWeights)
+
+=======================================================================================================================
+User Interface
+=======================================================================================================================
+
++ UserInterface
+  + CLI
+  + GUI
+
+# User Inputs
+#   - Library Path (either an xml file, a folder, or anything else based on the +Read requirments)
+#   - Mood selected by the user (angry, ...)
+#   - Create/Modify/Delete mood inputs (mood name, mood id, color?)
+## INCOMPLETE LIST !!
+
+=======================================================================================================================
+Directory Structure
+=======================================================================================================================
+This is simply a proposed directory structure. I'm not a python programer so please fill free to change this in any way
+you see fit.
+
+MoodMusic/
+| -- bin/               # executables go here
+|
+| -- tests/             # all test
+|    | -- Module1/      # tests for Module1
+|    | -- Module2/      # tests for Module2
+|
+| -- docs/              # general documents
+|
+| -- api_docs/          # autogenerated API docs
+|
+| -- libraries/               # all non-python/external libraries
+|
+| -- data/              # holds data used by application (sqlite files, ...)
+|
+| -- Package1/          # Relavent modules can be grouped into packages
+| -- Package2/          
+|
+| -- setup.py
+| -- README
+
+=======================================================================================================================
+Database Structure
+=======================================================================================================================
+Song(
+hash -> hashcode of filename
+filepath -> filepath string
+attr1 -> value 1
+attr2 -> value 2
+...
+)
+
+Mood(
+hash -> hascode of filename
+title -> string name of mood
+)

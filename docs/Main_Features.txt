@@ -1,0 +1,10 @@
+Machine Learning
+Features (As Plugins)
+    + BPM
+    + Key
+    + Song Structure
+    + Instruments
+Backends
+GUI
+
+# check VLC to see if we can use it as a decoder
