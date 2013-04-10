@@ -84,6 +84,7 @@ class CLI:
         """Play a different track"""
         filePath = raw_input('Enter a file path to a new song: ')
         song = Song.song_from_filepath(filePath)
+        self.playlist = None
         self.play_song(song)
         
     #Add the current track to a user-inputted mood
