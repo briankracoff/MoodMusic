@@ -266,6 +266,7 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
+<<<<<<< HEAD
         p = Playlist(db, moods)
 
         print '\nHow would you like to select a song?\n'
@@ -283,11 +284,13 @@ def run():
             application.set_list(p)
             application.play_song()
 
- 
+            
+=======
         songFile = raw_input('Enter song file: ')
 
         chosenSong = Song.song_from_filepath(songFile)
         application.play_song(chosenSong)
+>>>>>>> 0cdc2215835d1d4b7c98c6f766f4bece3d746ad6
         
     elif choice == 'b':
         #User enters a mood
