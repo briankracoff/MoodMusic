@@ -28,9 +28,6 @@ class DB_Helper(object):
 
         #Removes non-attributes
         if songData != None:
-            songData.pop(commonId, None)
-            songData.pop(commonHash, None)
-            songData.pop(songFilePath, None)
             return songData
         else:
             return {}

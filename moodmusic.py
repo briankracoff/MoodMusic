@@ -247,7 +247,7 @@ def run():
     daemon.start()
 
     #Start CLI
-    application = CLI(daemon)
+    application = CLI()
 
     #Init Database Chatter
     db = DB_Helper()
@@ -269,10 +269,8 @@ def run():
 
         songFile = raw_input('Enter song file: ')
 
-        p.generate_list_song(db._hash(songFile))
-        application.set_list(p)
-
-        application.play_song()
+        chosenSong = Song.song_from_filepath(songFile)
+        application.play_song(chosenSong)
         
     elif choice == 'b':
         #User enters a mood
