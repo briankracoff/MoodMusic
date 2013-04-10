@@ -207,11 +207,7 @@ def __initialize_DB():
     print "Done with DB setup!\n"
 
 def __make_config_file():
-<<<<<<< HEAD
     apiKey = raw_input('Enter your EchoNest API Key: ')
-=======
-    apiKey = raw_input('Enter your EchoNest API Key (if you don\'t have one, use YNBJILDXWEZ6LGWLG: ')
->>>>>>> parent of f230c82... fixed search module
     musicLibraryFilePath = raw_input('Enter your music library file path: ')
 
     #Makes sure file exists
@@ -234,17 +230,10 @@ def __make_config_file():
 # Sets up DB, and prompts user for config params 
 def __first_time():
     print "****************\nWelcome to MoodMusic!\n****************\n"
-<<<<<<< HEAD
 
     print "****************\nFirst we are going to setup the DB:\n****************\n"
     __initialize_DB()
 
-=======
-
-    print "****************\nFirst we are going to setup the DB:\n****************\n"
-    __initialize_DB()
-
->>>>>>> parent of f230c82... fixed search module
     print "****************\nNext we're going to enter in some config parameters\n****************\n"
     __make_config_file()
 
