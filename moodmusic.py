@@ -247,7 +247,7 @@ def run():
     daemon.start()
 
     #Start CLI
-    application = CLI()
+    application = CLI(daemon)
 
     #Init Database Chatter
     db = DB_Helper()
