@@ -10,7 +10,7 @@ from pyechonest.track import track_from_file
 
 #Sets the EchoNest api Key
 #MUST be called before EchoNest can be used
-def set_api_key(apiKey):
+def set_api_key():
     pyechonest_config.ECHO_NEST_API_KEY = Config().get_attr('ECHO_NEST_API_KEY')
 
 ## function to read a whole library into the DB
