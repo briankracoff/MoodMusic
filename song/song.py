@@ -64,7 +64,7 @@ class Song:
         attributes = DB_Helper().attributes_for_filepath(filepath)
 
         if len(attributes) > 0:
-            return dict((key, attributes[index]) for index, key in enumerate(attributes.keys()))
+            return attributes
         else:
             # @todo: fetch data from echonest and persist them
             return {'No data in DB for this song':'it hasn\'t been imported yet'}
