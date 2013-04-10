@@ -9,7 +9,6 @@ import pickle
 from data.SqLite import *
 from data.DB_Helper import *
 from config import *
-from songSearch import *
 
 from ml.Playlist import Playlist
 
@@ -266,24 +265,6 @@ def run():
 
     if choice == 'a':
         #User enters a filepath
-        p = Playlist(db, moods)
-
-        print '\nHow would you like to select a song?\n'
-        print 'f -> Provide a filepath'
-        print 'l -> Search your Library'
-        selection = raw_input()
-        if selection == 'f':
-            songFile = raw_input('Enter song file: ')
-        elif selection == 'l':
-            songFile = song_search()
-        if songFile != None:
-    
-            p.generate_list_song(db._hash(songFile))
-
-            application.set_list(p)
-            application.play_song()
-
- 
         songFile = raw_input('Enter song file: ')
 
         chosenSong = Song.song_from_filepath(songFile)
