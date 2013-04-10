@@ -25,6 +25,8 @@ class CLI:
         self.instance = Instance("--sub-source marq")
         self.player = self.instance.media_player_new()
 
+        self.playlist = None
+
         #Event callbacks for end of song and for getting the position of the song
         event_manager = self.player.event_manager()
         event_manager.event_attach(EventType.MediaPlayerEndReached,      self.end_callback)
@@ -41,6 +43,9 @@ class CLI:
         self.keybindings.setdefault('>', self.next_track)
         self.keybindings.setdefault('q', self.quit_app)
         self.keybindings.setdefault('?', self.print_menu)
+
+    def set_list(self, p):
+        self.playlist = p
 
     def print_daemon_info(self):
         """Print status about the song importer"""
@@ -152,9 +157,20 @@ class CLI:
         """Stop and exit"""
         sys.exit(0)
 
-    def play_song(self, song):
-        self.song = song
-        self.nextSongPath = song.file
+    def play_song(self, song=None):
+        if song == None and self.playlist == None:
+            print "Need a playlist or a song."
+            sys.exit(1)
+        elif song == None:
+            self.song = self.playlist.get_current_song()
+        else:
+            self.song = song
+
+        if self.playlist.has_next_song():
+            self.nextSongPath = self.playlist.get_next_song()
+        else:
+            self.playlist._currentI = -1
+            self.nextSongPath = self.playlist.get_next_song()
 
         try:
             media = self.instance.media_new(song.file)

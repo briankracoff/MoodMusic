@@ -268,11 +268,11 @@ def run():
         p = Playlist(db, moods)
 
         songFile = raw_input('Enter song file: ')
-        mySong = Song.song_from_filepath(songFile)
-        application.play_song(mySong)
 
         p.generate_list_song(db._hash(songFile))
+        application.set_list(p)
 
+        application.play_song()
         
     elif choice == 'b':
         #User enters a mood
@@ -288,11 +288,9 @@ def run():
         p = Playlist(db, moods)
         p.add_mood(chosenMood)
         p.generate_list_mood()
+        application.set_list(p)
 
-        songFile = p.get_current_song()
-        
-        mySong = Song.song_from_filepath(songFile)
-        application.play_song(mySong)
+        application.play_song()
 
 if __name__ == '__main__':
     run()
