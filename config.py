@@ -5,6 +5,7 @@ import pickle
 
 # SqLite Config
 DEFAULT_DB = "default"
+SANDBOX_DB = "sandboxDB"
 
 class Config:
 

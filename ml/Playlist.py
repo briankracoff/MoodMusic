@@ -86,9 +86,11 @@ class Playlist:
         header, categs = self._generator.categorize_songs_probab(songs)
 
         moodsIndices = [header.index(m) for m in self._moods]
-        mergeCats = [sum([x[i] for i in moodsIndices])/len(moodsIndices) 
-                     for x in categs]
-        self._to_list([hashes[i] for i,x in enumerate(mergeCats) if x > .8])
+    
+        mergeCats = [(hashes[j],sum([x[i] for i in moodsIndices])) 
+                     for j,x in enumerate(categs) 
+                     if sum([x[i] for i in moodsIndices]) > .5]
+        self._to_list([pair[0] for pair in sorted(mergeCats, reverse=True)])
 
     def generate_list_song(self, kernelsong):
         '''
@@ -118,7 +120,7 @@ class Playlist:
         for x in songs:
             files.append(Song.song_from_filepath(self._db.hash_to_file(x)))
             
-        shuffle(files)
+        # shuffle(files)
         self._list = files
 
     def _get_mood_list(self, songs, moods):
@@ -150,4 +152,6 @@ class Playlist:
 
     def get_list(self, length=50):
         ''' '''
-        return self._list[:length]
+        plist = self._list[:length]
+        shuffle(plist)
+        return plist
