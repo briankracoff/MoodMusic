@@ -325,8 +325,16 @@ def run():
         p.add_mood(chosenMood)
         p.generate_list_mood()
         
-        for s in p.get_list(maxlen):
+        plist = p.get_list(maxlen)
+        for s in plist:
             print str(s)
+
+        print "Save as .m3u? y/n"
+        save = raw_input("> ")
+        if save == "y":
+            m3u = open("playlist.m3u","wb")
+            for song in plist:
+                print>>m3u, song
 
 
 if __name__ == '__main__':
