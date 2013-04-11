@@ -23,7 +23,7 @@ class DB_Helper(object):
                                 cls)
         return cls._instance
 
-    def __init__(self, new = False, db = config.SANDBOX_DB):
+    def __init__(self, new = False, db = config.DEFAULT_DB):
         self.db = SqLite(db);
 
     #Returns a dictionary of attributes for a song's filepath
