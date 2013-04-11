@@ -59,6 +59,7 @@ class Importer(object):
         
         for song in self.__files:
             song_attributes(song, False, db)
+
             print("#") # print a # for each file that is completed
             try:
                 stdout.flush() # flush to have live output in the other process

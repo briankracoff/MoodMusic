@@ -125,7 +125,7 @@ class DB_Helper(object):
         try:
             self.db.write(attributesDict)
         except Exception:
-            print "uh oh!"
+            pass
 
     @staticmethod
     def _hash(filepath):
