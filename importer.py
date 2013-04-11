@@ -9,5 +9,5 @@ from config import *
 
 if __name__ == '__main__':
     #Start background thread importer
-    importer = Importer(Config().get_attr('MUSIC_LIBRARY_FILE_PATH'), 100)
+    importer = Importer(Config().get_attr('MUSIC_LIBRARY_FILE_PATH'), 100000)
     importer.fetcher()

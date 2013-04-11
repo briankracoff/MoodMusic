@@ -11,6 +11,8 @@ import sys
 from collections import OrderedDict
 from inspect import getargspec
 from song.song import *
+from config import *
+from songSearch import *
 
 try:
     from msvcrt import getch
@@ -82,10 +84,25 @@ class CLI:
     #Open a new track to play
     def play_different_track(self):
         """Play a different track"""
-        filePath = raw_input('Enter a file path to a new song: ')
-        song = Song.song_from_filepath(filePath)
-        self.playlist = None
-        self.play_song(song)
+        
+        print "\nHow would you like to select a song?\n"
+        print "l -> Search your Library"
+        print "f -> Enter a filepath"
+
+        selection = raw_input()
+        while (selection not in ['l', 'f']):
+            selection = raw_input('Please enter an option above: ')
+        if selection == 'l':
+            filePath = song_search(Config().get_attr('MUSIC_LIBRARY_FILE_PATH'))
+        elif selection == 'f':
+            #User enters a filepath
+            filePath = raw_input('Enter a file path to a new song: ')
+
+        if filePath != None:
+        
+            song = Song.song_from_filepath(filePath)
+            self.playlist = None
+            self.play_song(song)
         
     #Add the current track to a user-inputted mood
     def add_to_mood(self):

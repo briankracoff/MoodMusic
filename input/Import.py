@@ -20,7 +20,7 @@ class Importer(object):
     
     __daemon = None
 
-    def __init__(self, path, max_files = 100):
+    def __init__(self, path, max_files = 100000):
         '''
         Tries to detect library type and import it
         '''
