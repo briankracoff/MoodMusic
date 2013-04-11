@@ -9,8 +9,10 @@ def song_search(MUSIC_FOLDER):
     # Note that these fields are not
     print "Enter an Artist:",
     searcha = raw_input()
+    searcha = searcha.lower()
     print "Enter a song:",
     searchs = raw_input()
+    searchs = searchs.lower()
 
     if MUSIC_FOLDER.find('.xml') != -1:
         files = []
@@ -25,7 +27,8 @@ def song_search(MUSIC_FOLDER):
                         # to an absolute path
                         p = urlparse.urlparse(match.group(1))
                         match = urllib.unquote(os.path.abspath(os.path.join(p.netloc, p.path)))
-                        if match.find(searcha) != -1 and match.find(searchs) != -1:
+                        matchlowered = match.lower()
+                        if matchlowered.find(searcha) != -1 and matchlowered.find(searchs) != -1:
                             print 'Found the filepath:', match
                             print 'Is this what you were looking for? (y or n, or g to give up)'
                             answer = raw_input()
@@ -39,7 +42,8 @@ def song_search(MUSIC_FOLDER):
         for dirname, dirnames, filenames in os.walk(MUSIC_FOLDER):
             for filename in filenames:
                 currpath = os.path.join(dirname, filename)
-                if currpath.find(searcha) != -1 and currpath.find(searchs) != -1:
+                currpathlowered = currpath.lower()
+                if currpathlowered.find(searcha) != -1 and currpathlowered.find(searchs) != -1:
                     print 'Found the filepath:', currpath
                     print 'Is this what you were looking for? (y or n, or g to give up)'
                     answer = raw_input()
