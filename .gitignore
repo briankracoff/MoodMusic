@@ -1,3 +1,4 @@
 *.pyc
 myconfig.py
 config.pkl
+.pid
