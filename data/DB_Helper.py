@@ -12,19 +12,16 @@ class DB_Helper(object):
     #Singleton pattern
     _instance = None
     def __new__(cls, *args, **kwargs):
-        if config.SANDBOX_DB in args:
-            cls._instance = super(DB_Helper, cls).__new__(
-                        cls)
         if True in args:
             return super(DB_Helper, cls).__new__(
                             cls, *args, **kwargs)
         elif not cls._instance:
             cls._instance = super(DB_Helper, cls).__new__(
-                                cls)
+                                cls, *args, **kwargs)
         return cls._instance
 
-    def __init__(self, new = False, db = config.DEFAULT_DB):
-        self.db = SqLite(db);
+    def __init__(self, new = False):
+        self.db = SqLite(config.CHOSEN_DB);
 
     #Returns a dictionary of attributes for a song's filepath
     def attributes_for_filepath(self, filepath):
