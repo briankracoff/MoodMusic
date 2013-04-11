@@ -15,6 +15,8 @@ from sys import argv
 from ml.Playlist import Playlist
 
 from input.Import import FetchData
+import atexit # used for removing the PID file on exit
+import os
 
 #Returns a list of attributes
 def __get_attribute_schema():
@@ -239,7 +241,8 @@ def __first_time():
     print "****************\nNext we're going to enter in some config parameters\n****************\n"
     __make_config_file()
 
-def run():
+def run():    
+    atexit.register(lambda: os.remove(FetchData.pid_file))
 
     if not os.path.isfile('config.pkl'):
         __first_time()

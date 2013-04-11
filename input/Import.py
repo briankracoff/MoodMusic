@@ -58,6 +58,9 @@ class Importer(object):
         db = DB_Helper(True) # create a new database instance
         
         for song in self.__files:
+            if not os.path.exists(FetchData.pid_file): # do we have a pid file ?
+                return
+            
             song_attributes(song, False, db)
 
             print("#") # print a # for each file that is completed
@@ -65,6 +68,9 @@ class Importer(object):
                 stdout.flush() # flush to have live output in the other process
             except Exception:
                 pass
+            
+        if os.path.exists(FetchData.pid_file): #remove the pid
+            os.remove(FetchData.pid_file)
     
     def isAlive(self):
         '''
@@ -82,6 +88,7 @@ class FetchData(threading.Thread):
     '''
     Implements the Thread class to create a daemon
     '''
+    pid_file = '.pid'
     
     def __init__(self, fetcher_function = None):
         '''
@@ -100,6 +107,14 @@ class FetchData(threading.Thread):
         '''
         Call the provided runnable function
         '''
+        if os.path.exists(self.pid_file):
+            return False
+        
+        # create a pid file with dummy content
+        pid = open(self.pid_file, 'w+')
+        pid.write('dummy')
+        pid.close()
+            
         self.runnable()
     
     def subprocess(self):
@@ -111,7 +126,8 @@ class FetchData(threading.Thread):
         
         while True:
             line = proc.stdout.readline().strip()
-            if not line: break
+            if not line:
+                break
             
             if line == "#":
                 self.process["done"] += 1
