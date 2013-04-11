@@ -238,6 +238,52 @@ def __first_time():
     print "****************\nNext we're going to enter in some config parameters\n****************\n"
     __make_config_file()
 
+def choice_c(moods, db):
+    print "Choose a mood from the options below:"
+    for mood in moods:
+        print mood
+
+    chosenMood = raw_input('Enter choice: ')
+    while chosenMood not in moods:
+        chosenMood = raw_input('Please enter one of the options above: ')
+
+    print "Max length of your playlist: "
+    x = True
+    while x:
+        maxlen = raw_input("> ")
+        try:
+            maxlen = int(maxlen)
+            x = False
+        except:
+            print "Cannot be converted to integer, try again."
+    # make playlist
+    p = Playlist(db, moods)
+    p.add_mood(chosenMood)
+    p.generate_list_mood()
+        
+    plist = p.get_list(maxlen)
+    for s in plist:
+        print str(s)
+
+    print "Save as .m3u? y/n"
+    save = raw_input("> ")
+    if save == "y":
+        m3u = open("playlist.m3u","wb")
+        for song in plist:
+            print>>m3u, song
+
+def choice_d(moods, db):
+    print "Enter the song file path you want to add to a mood:"
+    filepath = raw_input("> ")
+    while not db.is_in_db(filepath):
+        print "Song not in database. Try again."
+        filepath = raw_input("> ")
+    print "Choose mood to add (or new mood)."
+    for mood in moods:
+        print mood
+    chosenMood = raw_input('> ')
+    db.add_mood(filepath, chosenMood)
+
 def run():
 
     if not os.path.isfile('config.pkl'):
@@ -260,9 +306,10 @@ def run():
     if len(moods) > 0:
         print "b -> Enter mood to play"
         print "c -> Generate a playlist from mood (without playing)"
+    print "d -> Add song to mood (without playing)"
 
     choice = raw_input('\nEnter your choice: ')
-    while(choice not in ['a', 'b', 'c']):
+    while(choice not in ['a', 'b', 'c', 'd']):
         choice = raw_input('Please enter an option above: ')
 
     if choice == 'a':
@@ -303,39 +350,10 @@ def run():
         application.play_song()
 
     elif choice == 'c':
-        print "Choose a mood from the options below:"
-        for mood in moods:
-            print mood
-
-        chosenMood = raw_input('Enter choice: ')
-        while chosenMood not in moods:
-            chosenMood = raw_input('Please enter one of the options above: ')
-
-        print "Max length of your playlist: "
-        x = True
-        while x:
-            maxlen = raw_input("> ")
-            try:
-                maxlen = int(maxlen)
-                x = False
-            except:
-                print "Cannot be converted to integer, try again."
-        # make playlist
-        p = Playlist(db, moods)
-        p.add_mood(chosenMood)
-        p.generate_list_mood()
-        
-        plist = p.get_list(maxlen)
-        for s in plist:
-            print str(s)
-
-        print "Save as .m3u? y/n"
-        save = raw_input("> ")
-        if save == "y":
-            m3u = open("playlist.m3u","wb")
-            for song in plist:
-                print>>m3u, song
-
+        choice_c(moods, db)
+    elif choice == 'd':
+        choice_d(moods, db)
 
 if __name__ == '__main__':
     run()
+
