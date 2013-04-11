@@ -5,22 +5,26 @@
 
 from data.SqLite import SqLite, C
 from data.DB_constants import *
+import config
 
 class DB_Helper(object):
 
     #Singleton pattern
     _instance = None
     def __new__(cls, *args, **kwargs):
+        if config.SANDBOX_DB in args:
+            cls._instance = super(DB_Helper, cls).__new__(
+                        cls)
         if True in args:
             return super(DB_Helper, cls).__new__(
                             cls, *args, **kwargs)
         elif not cls._instance:
             cls._instance = super(DB_Helper, cls).__new__(
-                                cls, *args, **kwargs)
+                                cls)
         return cls._instance
 
-    def __init__(self, new = False):
-        self.db = SqLite();
+    def __init__(self, new = False, db = config.SANDBOX_DB):
+        self.db = SqLite(db);
 
     #Returns a dictionary of attributes for a song's filepath
     def attributes_for_filepath(self, filepath):

@@ -10,6 +10,7 @@ from data.SqLite import *
 from data.DB_Helper import *
 from config import *
 from songSearch import *
+from sys import argv
 
 from ml.Playlist import Playlist
 
@@ -336,6 +337,49 @@ def run():
             for song in plist:
                 print>>m3u, song
 
+def run_sandbox():
+    print "****************\nWelcome to the sandboxed MoodMusic\n****************"
+    print "\nYou are using our DB of thousands of songs so that you can test our machine learning algorithms\n"
+
+    #Makes the DB_Helper use Tom's Sandbox DB
+    db = DB_Helper(False, config.SANDBOX_DB)
+
+    print "Choose a mood from the options below:"
+    moods = DB_Helper().all_moods()
+    for mood in moods:
+        print mood
+
+    chosenMood = raw_input('Enter choice: ')
+    while chosenMood not in moods:
+        chosenMood = raw_input('Please enter one of the options above: ')
+
+    print "Max length of your playlist: "
+    x = True
+    while x:
+        maxlen = raw_input("> ")
+        try:
+            maxlen = int(maxlen)
+            x = False
+        except:
+            print "Cannot be converted to integer, try again."
+    # make playlist
+    p = Playlist(db, moods)
+    p.add_mood(chosenMood)
+    p.generate_list_mood()
+    
+    plist = p.get_list(maxlen)
+    for s in plist:
+        print str(s)
+
+    print "Save as .m3u? y/n"
+    save = raw_input("> ")
+    if save == "y":
+        m3u = open("playlist.m3u","wb")
+        for song in plist:
+            print>>m3u, song
 
 if __name__ == '__main__':
-    run()
+    if argv[1:] and argv[1] == '--test':
+        run_sandbox()
+    else:
+        run()

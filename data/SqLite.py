@@ -232,6 +232,12 @@ class SqLite(object):
         
         return self.__connection.commit()
 
+    def closeConnection(self):
+        '''
+        Close connection to the DB
+        '''
+        self.__connection.close()
+
 class C(object):
     '''
     Condition Class
