@@ -7,6 +7,8 @@ import pickle
 DEFAULT_DB = "default"
 SANDBOX_DB = "sandboxDB"
 
+CHOSEN_DB = DEFAULT_DB
+
 class Config:
 
     #Singleton pattern

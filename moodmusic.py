@@ -368,7 +368,7 @@ def run_sandbox():
     print "\nYou are using our DB of thousands of songs so that you can test our machine learning algorithms\n"
 
     #Makes the DB_Helper use Tom's Sandbox DB
-    db = DB_Helper(False, config.SANDBOX_DB)
+    db = DB_Helper()
 
     print "Choose a mood from the options below:"
     moods = DB_Helper().all_moods()
@@ -406,6 +406,7 @@ def run_sandbox():
 
 if __name__ == '__main__':
     if argv[1:] and argv[1] == '--test':
+        config.CHOSEN_DB = config.SANDBOX_DB
         run_sandbox()
     else:
         run()
