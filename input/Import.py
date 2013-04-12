@@ -133,3 +133,10 @@ class FetchData(threading.Thread):
                 self.process["done"] += 1
             else:
                 self.process["total"] = int(line)
+
+    @staticmethod
+    def removePID():
+        try:
+            os.remove(FetchData.pid_file)
+        except Exception:
+            pass
