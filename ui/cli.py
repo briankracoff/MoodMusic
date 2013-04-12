@@ -12,7 +12,7 @@ from collections import OrderedDict
 from inspect import getargspec
 from song.song import *
 from config import *
-from songSearch import *
+from search.songSearch import *
 
 try:
     from msvcrt import getch

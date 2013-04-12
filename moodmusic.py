@@ -9,7 +9,7 @@ import pickle
 from data.SqLite import *
 from data.DB_Helper import *
 from config import *
-from songSearch import *
+from search.songSearch import *
 from sys import argv
 
 from ml.Playlist import Playlist

@@ -31,7 +31,7 @@ def song_search(MUSIC_FOLDER):
                         if matchlowered.find(searcha) != -1 and matchlowered.find(searchs) != -1:
                             print 'Found the filepath:', match
                             print 'Is this what you were looking for? (y or n, or g to give up)'
-                            answer = raw_input()
+                            answer = raw_input('> ')
                             if answer == 'y':
                                 return match
                             elif answer == 'g':
