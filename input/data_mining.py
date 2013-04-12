@@ -4,6 +4,7 @@ from data.DB_Helper import *
 import os
 import math
 from config import *
+from itertools import tee, izip
 
 from pyechonest import config as pyechonest_config
 from pyechonest.track import track_from_file
@@ -339,27 +340,23 @@ def get_ratio(array, value):
     if not array:
         return None
 
-    count = 0
-    for k in array:
-        if k >= value:
-            count += 1
+    count = sum(1 for k in array if k >= value)
 
     return float(count)/float(len(array))
     
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
     
 def get_differential(array):
     if not array:
         return 0
 
-    diffs = []
-    i = 1
-    while i < len(array):
-        diffs.append(array[i] - array[i-1])
-        i += 1
+    diffs = [second - first for first, second in pairwise(array)]
 
-    abssum = 0
-    for k in diffs:
-        abssum += abs(k)
+    abssum = sum(abs(k) for k in diffs)
 
     return float(abssum)/float(len(diffs))
 
@@ -367,9 +364,7 @@ def get_aver(array):
     if not array:
         return None
 
-    aggr = 0
-    for k in array:
-        aggr += k
+    aggr = sum(array)
 
     return aggr/len(array)
 
@@ -379,9 +374,7 @@ def get_devi(array, average):
     if not array:
         return None
 
-    aggr = 0
-    for k in array:
-        aggr += (k - average)**2
+    aggr = sum((k - average)**2 for k in array)
 
     return math.sqrt(aggr/len(array))
 
@@ -390,9 +383,7 @@ def get_average(array, feature):
     if not array:
         return None
 
-    aggr = 0
-    for k in array:
-        aggr += k[feature]
+    aggr = sum(k[feature] for k in array)
 
     return aggr/len(array)
 
@@ -402,8 +393,6 @@ def get_deviation(array, feature, average):
     if not array:
         return None
 
-    aggr = 0
-    for k in array:
-        aggr += (k[feature] - average)**2
+    aggr = sum((k[feature] - average)**2 for k in array)
 
     return math.sqrt(aggr/len(array))
