@@ -401,8 +401,14 @@ def run_sandbox():
             print>>m3u, song
 
 if __name__ == '__main__':
-    if argv[1:] and argv[1] == '--test':
-        config.CHOSEN_DB = config.SANDBOX_DB
-        run_sandbox()
+    if argv[1:]:
+        if argv[1] == '--test':
+            #Run in sandbox with other db
+            config.CHOSEN_DB = config.SANDBOX_DB
+            run_sandbox()
+        elif argv[1] == '--marsyas':
+            #Run with marsyas features
+            config.CHOSEN_FEATURE_TABLE = MARSYAS_SONG_TABLE
+            run()
     else:
         run()

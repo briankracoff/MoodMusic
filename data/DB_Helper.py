@@ -74,7 +74,7 @@ class DB_Helper(object):
 
     # get filepath from hash
     def hash_to_file(self, h):
-        self.db.setNamespace(songNamespace)
+        self.db.setNamespace(config.CHOSEN_FEATURE_TABLE)
         
         self.db.search(C._raw(commonHash, '=', str(h)))
         result = self.db.read()
@@ -92,7 +92,7 @@ class DB_Helper(object):
 
     #Gets all of the data out of the Song namespace (except for id and hash)
     def all_songs(self):
-        self.db.setNamespace(songNamespace)
+        self.db.setNamespace(config.CHOSEN_FEATURE_TABLE)
 
         #Get songdata from DB with hash
         self.db.search() 
@@ -103,7 +103,7 @@ class DB_Helper(object):
     #Get the song with the given hash
     def get_song(self, filepath):
         songHash = DB_Helper._hash(filepath)
-        self.db.setNamespace(songNamespace)
+        self.db.setNamespace(config.CHOSEN_FEATURE_TABLE)
 
         #Finds song if it exists
         self.db.search(C._raw(commonHash, "=", songHash))
@@ -115,7 +115,7 @@ class DB_Helper(object):
 
     #Adds the song to the DB
     def add_song(self, attributesDict):
-        self.db.setNamespace(songNamespace)
+        self.db.setNamespace(config.CHOSEN_FEATURE_TABLE)
         
         songHash = DB_Helper._hash(attributesDict[songFilePath['name']])
 
