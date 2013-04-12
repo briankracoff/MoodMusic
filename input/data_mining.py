@@ -359,20 +359,16 @@ def get_differential(array):
         abssum = 0
         for k in diffs:
             abssum += abs(k)
-        if len(diffs) != 0:
-            return float(abssum)/float(len(diffs))
-        else:
-            return None
+
+        return float(abssum)/float(len(diffs))
 
 def get_aver(array):
     if len(array) > 0:
         aggr = 0
         for k in array:
             aggr += k
-        if float(len(array)) != 0:
-            return aggr/len(array)
-        else:
-            return None
+
+        return aggr/len(array)
     else:
         return None
 
@@ -383,10 +379,8 @@ def get_devi(array, average):
         aggr = 0
         for k in array:
             aggr += math.pow((k - average), 2)
-        if len(array) != 0:
-            return math.sqrt(aggr/len(array))
-        else:
-            return None
+
+        return math.sqrt(aggr/len(array))
     else:
         return None
 
@@ -397,10 +391,8 @@ def get_average(array, feature):
         aggr = 0
         for k in array:
             aggr += k[feature]
-        if len(array) != 0:
-            return aggr/len(array)
-        else:
-            return None
+
+        return aggr/len(array)
     else:
         return None
 
@@ -411,10 +403,8 @@ def get_deviation(array, feature, average):
         aggr = 0
         for k in array:
             aggr += math.pow((k[feature] - average), 2)
-        if len(array) != 0:
-            return math.sqrt(aggr/len(array))
-        else:
-            return None
+
+        return math.sqrt(aggr/len(array))
     else:
         return None
 
