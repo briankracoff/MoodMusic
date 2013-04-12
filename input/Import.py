@@ -7,11 +7,19 @@ Created on Mar 29, 2013
 '''
 
 import os, threading
-import iTunes, Filesystem
-from data_mining import song_attributes, set_api_key
-from data.DB_Helper import DB_Helper
 import subprocess
 from sys import stdout
+
+import iTunes, Filesystem
+import config
+from data.DB_Helper import DB_Helper
+
+if config.CHOSEN_FEATURE_TABLE == config.DEFAULT_SONG_TABLE:
+    from data_mining import song_attributes, set_api_key
+    set_api_key()
+else:
+    print("STUB")
+    #from marsyas import song_attributes_marsyas
 
 class Importer(object):
     '''
@@ -49,7 +57,6 @@ class Importer(object):
         '''
         This is called to fetch song data
         '''
-        set_api_key()
         
         # print the number of files, used to create progress bar
         print (str(len(self.__files)))
