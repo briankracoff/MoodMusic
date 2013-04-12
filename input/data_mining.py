@@ -381,7 +381,7 @@ def get_devi(array, average):
 
     aggr = 0
     for k in array:
-        aggr += math.pow((k - average), 2)
+        aggr += (k - average)**2
 
     return math.sqrt(aggr/len(array))
 
@@ -404,6 +404,6 @@ def get_deviation(array, feature, average):
 
     aggr = 0
     for k in array:
-        aggr += math.pow((k[feature] - average), 2)
+        aggr += (k[feature] - average)**2
 
     return math.sqrt(aggr/len(array))
