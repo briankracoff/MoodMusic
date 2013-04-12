@@ -181,7 +181,7 @@ def __initialize_DB():
     }
 
     for attribute in __get_attribute_schema():
-        song_def[attribute['name']] = attribute['type']
+        song_def[attribute.name] = attribute.type
 
     db.installNamespace(songNamespace, song_def)
     print "Song namespace created\n"
