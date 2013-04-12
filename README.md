@@ -22,19 +22,21 @@ It uses [EchoNest](http://echonest.com/)'s API to get numerical representations 
 
 ###1. Install dependencies (if you don't already have them installed)
 
-####a. NumPy and SciPy
+####a. Python 2.7 (does not work on Python 3)
+
+####b. NumPy and SciPy
 
 Go to the following website for instructions: http://www.scipy.org/Installing_SciPy
 
-####b. SciKit-Learn
+####c. SciKit-Learn
 
     easy_install -U scikit-learn
     
-####c. VLC
+####d. VLC
 
 Install VLC media player at the following website: http://www.videolan.org/vlc/
 
-####d. PyEchoNest
+####e. PyEchoNest
 
         easy_install -U pyechonest
 
