@@ -58,4 +58,4 @@ Keep the program running as long as possible because there is a background proce
 
 ###2. Choose an option. We recommend using option 'd' in the beginning to add songs to moods so that you can start generating playlists based on moods.
         
-###2. Choose your desired option. 
+###3. Enjoy!
