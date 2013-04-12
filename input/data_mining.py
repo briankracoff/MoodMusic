@@ -336,75 +336,74 @@ def get_attr(fp, pathstring, db):
     db.add_song(song)
     
 def get_ratio(array, value):
+    if not array:
+        return None
+
     count = 0
     for k in array:
         if k >= value:
             count += 1
-    if float(len(array)) != 0:
-        return float(count)/float(len(array))
-    else:
-        return None
+
+    return float(count)/float(len(array))
     
     
 def get_differential(array):
-    if len(array) == 0:
+    if not array:
         return 0
-    else:
-        diffs = []
-        i = 1
-        while i < len(array):
-            diffs.append(array[i] - array[i-1])
-            i += 1
 
-        abssum = 0
-        for k in diffs:
-            abssum += abs(k)
+    diffs = []
+    i = 1
+    while i < len(array):
+        diffs.append(array[i] - array[i-1])
+        i += 1
 
-        return float(abssum)/float(len(diffs))
+    abssum = 0
+    for k in diffs:
+        abssum += abs(k)
+
+    return float(abssum)/float(len(diffs))
 
 def get_aver(array):
-    if len(array) > 0:
-        aggr = 0
-        for k in array:
-            aggr += k
-
-        return aggr/len(array)
-    else:
+    if not array:
         return None
+
+    aggr = 0
+    for k in array:
+        aggr += k
+
+    return aggr/len(array)
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
 def get_devi(array, average):
-    if len(array) > 0:
-        aggr = 0
-        for k in array:
-            aggr += math.pow((k - average), 2)
-
-        return math.sqrt(aggr/len(array))
-    else:
+    if not array:
         return None
 
+    aggr = 0
+    for k in array:
+        aggr += math.pow((k - average), 2)
+
+    return math.sqrt(aggr/len(array))
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
-    if len(array) > 0:
-        aggr = 0
-        for k in array:
-            aggr += k[feature]
-
-        return aggr/len(array)
-    else:
+    if not array:
         return None
+
+    aggr = 0
+    for k in array:
+        aggr += k[feature]
+
+    return aggr/len(array)
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
 def get_deviation(array, feature, average):
-    if len(array) > 0:
-        aggr = 0
-        for k in array:
-            aggr += math.pow((k[feature] - average), 2)
-
-        return math.sqrt(aggr/len(array))
-    else:
+    if not array:
         return None
 
+    aggr = 0
+    for k in array:
+        aggr += math.pow((k[feature] - average), 2)
+
+    return math.sqrt(aggr/len(array))
