@@ -383,9 +383,7 @@ def get_average(array, feature):
     if not array:
         return None
 
-    aggr = sum(k[feature] for k in array)
-
-    return aggr/len(array)
+    return get_aver([k[feature] for k in array])
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
@@ -393,6 +391,4 @@ def get_deviation(array, feature, average):
     if not array:
         return None
 
-    aggr = sum((k[feature] - average)**2 for k in array)
-
-    return math.sqrt(aggr/len(array))
+    return get_devi([k[feature] for k in array], average)
