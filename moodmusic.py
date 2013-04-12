@@ -359,10 +359,6 @@ def run():
     elif choice == 'd':
         choice_d(moods, db)
 
-if __name__ == '__main__':
-    run()
-
-
 def run_sandbox():
     print "****************\nWelcome to the sandboxed MoodMusic\n****************"
     print "\nYou are using our DB of thousands of songs so that you can test our machine learning algorithms\n"
