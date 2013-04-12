@@ -13,13 +13,6 @@ from pyechonest.track import track_from_file
 def set_api_key():
     pyechonest_config.ECHO_NEST_API_KEY = Config().get_attr('ECHO_NEST_API_KEY')
 
-## function to read a whole library into the DB
-## takea a path as an argument
-def library_attributes():
-    for dirname, dirnames, filenames in os.walk(MUSIC_FOLDER):
-        for filename in filenames:
-            song_attributes(os.path.join(dirname, filename))
-
 ## function to read an individual song into the DB
 ## takes a filepath as an argument
  # this could be augmented to take a hash instead
