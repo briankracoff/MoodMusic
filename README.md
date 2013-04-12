@@ -29,6 +29,14 @@ Go to the following website for instructions: http://www.scipy.org/Installing_Sc
 ####b. SciKit-Learn
 
     easy_install -U scikit-learn
+    
+####c. VLC
+
+Install VLC media player at the following website: http://www.videolan.org/vlc/
+
+####d. PyEchoNest
+
+        easy_install -U pyechonest
 
 ###2. Clone repo (or download as a zip)
 
