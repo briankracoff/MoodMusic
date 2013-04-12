@@ -289,7 +289,7 @@ def choice_d(moods, db):
         db.add_mood(filepath, chosenMood)        
 
 def run():    
-    atexit.register(lambda: os.remove(FetchData.pid_file))
+    atexit.register(FetchData.removePID())
 
     if not os.path.isfile('config.pkl'):
         __first_time()
