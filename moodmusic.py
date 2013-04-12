@@ -323,7 +323,7 @@ def run():
         print "l -> Search your Library"
         print "f -> Enter a filepath"
 
-        selection = raw_input()
+        selection = raw_input('> ')
         while (selection not in ['l', 'f']):
             selection = raw_input('Please enter an option above: ')
         if selection == 'l':
