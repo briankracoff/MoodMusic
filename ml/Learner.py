@@ -34,13 +34,17 @@ class Learner:
     def categorize_songs_single(self, songs):
         ''' produces best fit category for list of songs'''
         data = self._normalize(songs)
-        predictions = self._model.predict(data)
+        with warn.catch_warnings():
+            warn.simplefilter("ignore")
+            predictions = self._model.predict(data)
         return self._convert_int_to_mood(predictions)
 
     def categorize_songs_probab(self, songs):
         ''' produces probabilities for each song for each mood '''
         data = self._normalize(songs)
-        predictions = self._model.predict_proba(data)
+        with warn.catch_warnings():
+            warn.simplefilter("ignore")
+            predictions = self._model.predict_proba(data)
         header = self._convert_int_to_mood(predictions)
         return header, predictions
 
