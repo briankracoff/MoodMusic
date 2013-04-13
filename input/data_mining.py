@@ -348,10 +348,8 @@ def get_aver(array):
     if not array:
         return None
 
-    aggr = sum(array)
+    return float(sum(array)) / float(len(array))
 
-    return aggr/len(array)
-    
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
     a, b = tee(iterable)
