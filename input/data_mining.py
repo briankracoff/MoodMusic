@@ -343,6 +343,14 @@ def get_ratio(array, value):
     count = sum(1 for k in array if k >= value)
 
     return float(count)/float(len(array))
+
+def get_aver(array):
+    if not array:
+        return None
+
+    aggr = sum(array)
+
+    return aggr/len(array)
     
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
@@ -359,14 +367,6 @@ def get_differential(array):
     abssum = sum(abs(k) for k in diffs)
 
     return float(abssum)/float(len(diffs))
-
-def get_aver(array):
-    if not array:
-        return None
-
-    aggr = sum(array)
-
-    return aggr/len(array)
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
