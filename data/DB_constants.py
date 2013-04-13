@@ -15,7 +15,6 @@ commonPath = "filepath"
 FieldInfo = namedtuple('FieldInfo', 'name type')
 
 #Song namespace
-songNamespace = "Song"
 songBeatAverage = FieldInfo("beat_average", 'REAL')
 songBeatDeviation = FieldInfo("beat_deviation", 'REAL')
 songBarsAverage = FieldInfo("bars_average", 'REAL')

@@ -161,18 +161,18 @@ def __initialize_DB():
     db = SqLite();
 
     print "............................\n"
-    
-    #Song namespace
-    print "Checking for Song namespace"
-    if db.hasNamespace(songNamespace):
-        print "Song namespace exists"
-        print "Deleting Song namespace"
-        db.removeNamespace(songNamespace)
-        print "Song namespace deleted"
-    else:
-        print "Song namespace doesn't exist"
 
-    print "Creating Song namespace"
+    ns = CHOSEN_FEATURE_TABLE
+    print "Checking for " + ns + " namespace"
+    if db.hasNamespace(ns):
+        print ns + " namespace exists"
+        print "Deleting " + ns + " namespace"
+        db.removeNamespace(ns)
+        print ns + " namespace deleted"
+    else:
+        print ns + " namespace doesn't exist"
+
+    print "Creating " + ns + " namespace"
     song_def = {
         commonHash:"TEXT",
         commonTitle:"TEXT",
@@ -180,11 +180,16 @@ def __initialize_DB():
         commonPath:"TEXT"
     }
 
-    for attribute in __get_attribute_schema():
+    if ns == DEFAULT_SONG_TABLE:
+        schema = __get_attribute_shema()
+    #else:
+    #   schema = ...
+
+    for attribute in schema:
         song_def[attribute.name] = attribute.type
 
-    db.installNamespace(songNamespace, song_def)
-    print "Song namespace created\n"
+    db.installNamespace(ns, song_def)
+    print ns + " namespace created\n"
 
     print "............................\n"
 
