@@ -8,7 +8,7 @@ from data.DB_constants import *
 
 class Playlist:
 
-    _excludeSongs = [commonHash, commonId, songFilePath.name,
+    _excludeSongs = [commonHash, commonId, commonPath,
                      commonTitle, commonArtist]
     _excludeMoods = [commonHash, commonId]
     

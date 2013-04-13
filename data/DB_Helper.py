@@ -80,7 +80,7 @@ class DB_Helper(object):
         result = self.db.read()
         
         # get filepath
-        return result[0][songFilePath.name]
+        return result[0][commonPath]
 
     #Adds the given mood for the song's filepath
     def add_mood(self, filepath, title):
@@ -117,7 +117,7 @@ class DB_Helper(object):
     def add_song(self, attributesDict):
         self.db.setNamespace(config.CHOSEN_FEATURE_TABLE)
         
-        songHash = DB_Helper._hash(attributesDict[songFilePath.name])
+        songHash = DB_Helper._hash(attributesDict[commonPath])
 
         #Adds hash to attributes
         attributesDict[commonHash] = songHash

@@ -10,12 +10,12 @@ commonId = "id"
 commonHash = "hash"
 commonTitle = "title"
 commonArtist = "artist"
+commonPath = "filepath"
 
 FieldInfo = namedtuple('FieldInfo', 'name type')
 
 #Song namespace
 songNamespace = "Song"
-songFilePath = FieldInfo("filepath", 'TEXT')
 songBeatAverage = FieldInfo("beat_average", 'REAL')
 songBeatDeviation = FieldInfo("beat_deviation", 'REAL')
 songBarsAverage = FieldInfo("bars_average", 'REAL')

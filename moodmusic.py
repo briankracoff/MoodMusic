@@ -21,7 +21,6 @@ import os
 #Returns a list of attributes
 def __get_attribute_schema():
     return [
-        songFilePath,
         songBeatAverage,
         songBeatDeviation,
         songBarsAverage,
@@ -177,7 +176,8 @@ def __initialize_DB():
     song_def = {
         commonHash:"TEXT",
         commonTitle:"TEXT",
-        commonArtist:"TEXT"
+        commonArtist:"TEXT",
+        commonPath:"TEXT"
     }
 
     for attribute in __get_attribute_schema():

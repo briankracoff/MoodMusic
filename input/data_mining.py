@@ -195,7 +195,7 @@ def get_attr(fp, pathstring, db):
         
 
     
-    song = { songFilePath.name: pathstring,
+    song = { commonPath: pathstring,
              commonTitle: thistitle,
              commonArtist: thisartist,
              songBeatAverage.name: beatsavg,
