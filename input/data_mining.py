@@ -360,11 +360,8 @@ def get_differential(array):
     if not array:
         return 0
 
-    diffs = [second - first for first, second in pairwise(array)]
-
-    abssum = sum(abs(k) for k in diffs)
-
-    return float(abssum)/float(len(diffs))
+    return get_aver([abs(second - first) for first, second
+                                         in pairwise(array)])
 
 ## function to get the standard deviation of a set of values found in a dict
  # requires that the average is computed first and passed as an argument
@@ -372,9 +369,7 @@ def get_devi(array, average):
     if not array:
         return None
 
-    aggr = sum((k - average)**2 for k in array)
-
-    return math.sqrt(aggr/len(array))
+    return math.sqrt(get_aver([(k - average)**2 for k in array]))
 
 ## function to average a specific set of values found in a dict
 def get_average(array, feature):
