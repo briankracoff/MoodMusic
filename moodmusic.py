@@ -10,7 +10,7 @@ from data.SqLite import *
 from data.DB_Helper import *
 from config import *
 from search.songSearch import *
-from sys import argv
+import argparse
 
 from ml.Playlist import Playlist
 
@@ -288,15 +288,17 @@ def choice_d(moods, db):
         chosenMood = raw_input('> ')
         db.add_mood(filepath, chosenMood)        
 
-def run():    
+def run(runBackgroundImporter = True):    
     atexit.register(FetchData.removePID)
 
     if not os.path.isfile('config.pkl'):
         __first_time()
 
-    #Starts background daemon
-    daemon = FetchData()
-    daemon.start()
+    daemon = None
+    if runBackgroundImporter:
+        #Starts background daemon
+        daemon = FetchData()
+        daemon.start()
 
     #Start CLI
     application = CLI(daemon)
@@ -401,14 +403,23 @@ def run_sandbox():
             print>>m3u, song
 
 if __name__ == '__main__':
-    if argv[1:]:
-        if argv[1] == '--test':
-            #Run in sandbox with other db
-            config.CHOSEN_DB = config.SANDBOX_DB
-            run_sandbox()
-        elif argv[1] == '--marsyas':
-            #Run with marsyas features
-            config.CHOSEN_FEATURE_TABLE = MARSYAS_SONG_TABLE
-            run()
+    argparser = argparse.ArgumentParser(prog='MoodMusic', description='A playlist generator in Python')
+    argparser.add_argument('-t', '--test', help='Run in the sandbox environment using a test DB', action='store_true')
+    argparser.add_argument('--no-import', help="Don't run the background importer during execution", action='store_true')
+    argparser.add_argument('-m', '--marsyas', help='Run with the alternative Marsyas feature detection', action='store_true')
+    args = argparser.parse_args()
+
+    if args.test:
+        config.CHOSEN_DB = config.SANDBOX_DB
+        run_sandbox()
+
     else:
-        run()
+        runBackgroundImporter = True
+
+        if args.marsyas:
+            config.CHOSEN_FEATURE_TABLE = MARSYAS_SONG_TABLE
+
+        if args.no_import:
+            runBackgroundImporter = False
+
+        run(runBackgroundImporter)

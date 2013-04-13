@@ -193,7 +193,8 @@ class CLI:
         self.keybindings.setdefault(' ', self.player.pause)
         self.keybindings.setdefault('m', self.add_to_mood)
         self.keybindings.setdefault('i', self.print_info)
-        self.keybindings.setdefault('d', self.print_daemon_info)
+        if self.daemon:
+            self.keybindings.setdefault('d', self.print_daemon_info)
         self.keybindings.setdefault('p', self.toggle_echo_position)
         self.keybindings.setdefault('n', self.play_different_track)
         if self.playlist:
