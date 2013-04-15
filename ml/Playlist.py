@@ -9,7 +9,7 @@ from data.DB_constants import *
 class Playlist:
 
     _excludeSongs = [commonHash, commonId, songFilePath.name,
-                     commonTitle, songArtist.name]
+                     commonTitle, commonArtist]
     _excludeMoods = [commonHash, commonId]
     
     def __init__(self, dbHelp, moods):
