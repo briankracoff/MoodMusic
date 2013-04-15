@@ -129,7 +129,8 @@ class FetchData(threading.Thread):
         Runs ./importer.py and updates the progress
         '''
         self.process = {"total":0, "done":0}
-        proc = subprocess.Popen(['python', './importer.py'], stdout=subprocess.PIPE, bufsize=1)
+        proc = subprocess.Popen(['python', './importer.py', config.CHOSEN_FEATURE_TABLE],
+                                stdout=subprocess.PIPE, bufsize=1)
         
         while True:
             line = proc.stdout.readline().strip()
