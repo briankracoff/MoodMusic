@@ -4,8 +4,25 @@
 # Usage: DB_Helper().method, since it is a singleton class
 
 from data.SqLite import SqLite, C
-from data.DB_constants import *
 import config
+
+from collections import namedtuple
+
+'''
+Database fields and their types
+'''
+#Common keys
+commonId = "id"
+commonHash = "hash"
+commonTitle = "title"
+commonArtist = "artist"
+commonPath = "filepath"
+
+FieldInfo = namedtuple('FieldInfo', 'name type')
+
+#Mood namespace
+moodNamespace = "Mood"
+moodTitle = "title"
 
 class DB_Helper(object):
 

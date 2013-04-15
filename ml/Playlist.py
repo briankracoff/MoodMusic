@@ -4,7 +4,7 @@ from random import shuffle
 import numpy as np
 from song.song import Song
 
-from data.DB_constants import *
+from data.DB_Helper import *
 
 class Playlist:
 
