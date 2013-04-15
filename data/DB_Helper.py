@@ -42,9 +42,7 @@ class DB_Helper(object):
         self.db.search(C._raw(commonHash, "=", songHash))
         rawMoods = self.db.read()
 
-        moods = []
-        for rawMood in rawMoods:
-            moods.append(rawMood[moodTitle])
+        moods = [rawMood[moodTitle] for rawMood in rawMoods]
 
         return moods
 
@@ -66,9 +64,7 @@ class DB_Helper(object):
         self.db.search()
         rawMoods = self.db.read()
 
-        ms = []
-        for m in rawMoods:
-            ms.append(m[moodTitle])
+        ms = [m[moodTitle] for m in rawMoods]
 
         return list(set(ms))
 
