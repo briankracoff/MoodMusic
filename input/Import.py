@@ -14,13 +14,6 @@ import iTunes, Filesystem
 import config
 from data.DB_Helper import DB_Helper
 
-if config.CHOSEN_FEATURE_TABLE == config.DEFAULT_SONG_TABLE:
-    from data_mining import song_attributes, set_api_key
-    set_api_key()
-else:
-    print("STUB")
-    #from marsyas import song_attributes_marsyas
-
 class Importer(object):
     '''
     Imports the library in the background
@@ -58,6 +51,13 @@ class Importer(object):
         This is called to fetch song data
         '''
         
+        if config.CHOSEN_FEATURE_TABLE == config.DEFAULT_SONG_TABLE:
+            from data_mining import song_attributes, set_api_key
+            set_api_key()
+        else:
+            print("STUB")
+            #from marsyas import song_attributes_marsyas
+
         # print the number of files, used to create progress bar
         print (str(len(self.__files)))
         stdout.flush()
