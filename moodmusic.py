@@ -57,22 +57,15 @@ def __initialize_DB():
     print "............................\n"
 
     #Mood namespace
-    print "Checking for Mood namespace"
-    if db.hasNamespace(moodNamespace):
-        print "Mood namespace exists"
-        print "Deleting Mood namespace"
-        db.removeNamespace(moodNamespace)
-        print "Mood namespace deleted"
-    else:    
-        print "Mood namespace doesn't exist"
+    if not db.hasNamespace(moodNamespace):
+        print "Mood namespace doesn't exist! Creating it..."
 
-    print "Creating Mood namespace"
-    mood_def = {
-        commonHash:"TEXT",
-        moodTitle:"TEXT"
-    }
-    db.installNamespace(moodNamespace, mood_def)
-    print "Mood namespace created\n"
+        mood_def = {
+            commonHash:"TEXT",
+            moodTitle:"TEXT"
+        }
+        db.installNamespace(moodNamespace, mood_def)
+        print "Mood namespace created\n"
 
     print "............................\n"
 
