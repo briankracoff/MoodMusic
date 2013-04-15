@@ -5,7 +5,7 @@ Created on Apr 3, 2013
 @version: 0.1
 '''
 from input.Import import Importer
-from config import *
+from config import Config
 
 if __name__ == '__main__':
     #Start background thread importer

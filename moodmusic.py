@@ -8,7 +8,7 @@ from song.song import Song
 import pickle
 from data.SqLite import *
 from data.DB_Helper import *
-from config import *
+import config
 from search.songSearch import *
 import argparse
 
@@ -25,7 +25,7 @@ def __initialize_DB():
 
     print "............................\n"
 
-    ns = CHOSEN_FEATURE_TABLE
+    ns = config.CHOSEN_FEATURE_TABLE
     print "Checking for " + ns + " namespace"
     if db.hasNamespace(ns):
         print ns + " namespace exists"
@@ -43,7 +43,7 @@ def __initialize_DB():
         commonPath:"TEXT"
     }
 
-    if ns == DEFAULT_SONG_TABLE:
+    if ns == config.DEFAULT_SONG_TABLE:
         from input.data_mining import attribute_schema
     #else:
     #   from input.marsyas import attribute_schema
@@ -285,7 +285,7 @@ if __name__ == '__main__':
         runBackgroundImporter = True
 
         if args.marsyas:
-            config.CHOSEN_FEATURE_TABLE = MARSYAS_SONG_TABLE
+            config.CHOSEN_FEATURE_TABLE = config.MARSYAS_SONG_TABLE
 
         if args.no_import:
             runBackgroundImporter = False

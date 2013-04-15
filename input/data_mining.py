@@ -3,7 +3,7 @@
 from data.DB_Helper import *
 import os
 import math
-from config import *
+from config import Config
 from itertools import tee, izip
 
 from pyechonest import config as pyechonest_config

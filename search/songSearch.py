@@ -1,6 +1,5 @@
 import os
 import re
-from config import *
 import urllib, urlparse
 
 

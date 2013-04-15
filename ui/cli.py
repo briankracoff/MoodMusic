@@ -11,7 +11,7 @@ import sys
 from collections import OrderedDict
 from inspect import getargspec
 from song.song import *
-from config import *
+from config import Config
 from search.songSearch import *
 
 try:
