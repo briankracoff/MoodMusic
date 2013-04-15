@@ -55,6 +55,8 @@ def __check_db():
         print "Mood namespace created\n"
 
 def __make_config_file():
+    print "****************\nSince this is your first time, you'll need to enter some config parameters\n****************\n"
+
     apiKey = raw_input('Enter your EchoNest API Key (if you don\'t have one, use YNBJILDXWEZ6LGWLG: ')
     musicLibraryFilePath = raw_input('Enter your music library file path: ')
 
@@ -73,13 +75,6 @@ def __make_config_file():
 
     print "Config file created\n\n"
  
-
-# Executes when the user hasn't run MoodMusic yet
-# Prompts user for config params
-def __first_time():
-    print "****************\nNext we're going to enter in some config parameters\n****************\n"
-    __make_config_file()
-
 def choice_c(moods, db):
     print "Choose a mood from the options below:"
     for mood in moods:
@@ -133,7 +128,7 @@ def run(runBackgroundImporter = True):
     atexit.register(FetchData.removePID)
 
     if not os.path.isfile('config.pkl'):
-        __first_time()
+        __make_config_file()
 
     __check_db()
 
