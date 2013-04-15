@@ -55,8 +55,7 @@ class Importer(object):
             from data_mining import song_attributes, set_api_key
             set_api_key()
         else:
-            print("STUB")
-            #from marsyas import song_attributes_marsyas
+            from marsyas_mir import song_attributes
 
         # print the number of files, used to create progress bar
         print (str(len(self.__files)))

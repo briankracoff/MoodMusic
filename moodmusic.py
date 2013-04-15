@@ -34,8 +34,8 @@ def __check_db():
 
         if ns == config.DEFAULT_SONG_TABLE:
             from input.data_mining import attribute_schema
-        #else:
-        #   from input.marsyas import attribute_schema
+        else:
+            from input.marsyas_mir import attribute_schema
 
         for attribute in attribute_schema:
             song_def[attribute.name] = attribute.type
