@@ -22,7 +22,6 @@ import os
 def __get_attribute_schema():
     return [
         songFilePath,
-        songTitle,
         songArtist,
         songBeatAverage,
         songBeatDeviation,
@@ -177,7 +176,8 @@ def __initialize_DB():
 
     print "Creating Song namespace"
     song_def = {
-        commonHash:"TEXT"
+        commonHash:"TEXT",
+        commonTitle:"TEXT"
     }
 
     for attribute in __get_attribute_schema():

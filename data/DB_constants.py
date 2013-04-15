@@ -8,13 +8,13 @@ from collections import namedtuple
 #Common keys
 commonId = "id"
 commonHash = "hash"
+commonTitle = "title"
 
 FieldInfo = namedtuple('FieldInfo', 'name type')
 
 #Song namespace
 songNamespace = "Song"
 songFilePath = FieldInfo("filepath", 'TEXT')
-songTitle = FieldInfo("title", 'TEXT')
 songArtist = FieldInfo("artist", 'TEXT')
 songBeatAverage = FieldInfo("beat_average", 'REAL')
 songBeatDeviation = FieldInfo("beat_deviation", 'REAL')
