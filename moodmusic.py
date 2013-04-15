@@ -86,8 +86,6 @@ def __make_config_file():
 # Executes when the user hasn't run MoodMusic yet
 # Sets up DB, and prompts user for config params 
 def __first_time():
-    print "****************\nWelcome to MoodMusic!\n****************\n"
-
     print "****************\nFirst we are going to setup the DB:\n****************\n"
     __initialize_DB()
 
@@ -142,6 +140,8 @@ def choice_d(moods, db):
         db.add_mood(filepath, chosenMood)        
 
 def run(runBackgroundImporter = True):    
+    print "****************\nWelcome to MoodMusic!\n****************\n"
+
     atexit.register(FetchData.removePID)
 
     if not os.path.isfile('config.pkl'):
