@@ -19,11 +19,8 @@ import atexit # used for removing the PID file on exit
 import os
 
 #Resets the DB schema
-def __initialize_DB():
-    print "Starting DB setup...\n"
+def __check_db():
     db = SqLite();
-
-    print "............................\n"
 
     ns = config.CHOSEN_FEATURE_TABLE
     if not db.hasNamespace(ns):
@@ -46,8 +43,6 @@ def __initialize_DB():
         db.installNamespace(ns, song_def)
         print ns + " namespace created\n"
 
-    print "............................\n"
-
     #Mood namespace
     if not db.hasNamespace(moodNamespace):
         print "Mood namespace doesn't exist! Creating it..."
@@ -58,10 +53,6 @@ def __initialize_DB():
         }
         db.installNamespace(moodNamespace, mood_def)
         print "Mood namespace created\n"
-
-    print "............................\n"
-
-    print "Done with DB setup!\n"
 
 def __make_config_file():
     apiKey = raw_input('Enter your EchoNest API Key (if you don\'t have one, use YNBJILDXWEZ6LGWLG: ')
@@ -84,11 +75,8 @@ def __make_config_file():
  
 
 # Executes when the user hasn't run MoodMusic yet
-# Sets up DB, and prompts user for config params 
+# Prompts user for config params
 def __first_time():
-    print "****************\nFirst we are going to setup the DB:\n****************\n"
-    __initialize_DB()
-
     print "****************\nNext we're going to enter in some config parameters\n****************\n"
     __make_config_file()
 
@@ -146,6 +134,8 @@ def run(runBackgroundImporter = True):
 
     if not os.path.isfile('config.pkl'):
         __first_time()
+
+    __check_db()
 
     daemon = None
     if runBackgroundImporter:
