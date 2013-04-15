@@ -26,33 +26,25 @@ def __initialize_DB():
     print "............................\n"
 
     ns = config.CHOSEN_FEATURE_TABLE
-    print "Checking for " + ns + " namespace"
-    if db.hasNamespace(ns):
-        print ns + " namespace exists"
-        print "Deleting " + ns + " namespace"
-        db.removeNamespace(ns)
-        print ns + " namespace deleted"
-    else:
-        print ns + " namespace doesn't exist"
+    if not db.hasNamespace(ns):
+        print ns + " namespace doesn't exist! Creating it..."
+        song_def = {
+            commonHash:"TEXT",
+            commonTitle:"TEXT",
+            commonArtist:"TEXT",
+            commonPath:"TEXT"
+        }
 
-    print "Creating " + ns + " namespace"
-    song_def = {
-        commonHash:"TEXT",
-        commonTitle:"TEXT",
-        commonArtist:"TEXT",
-        commonPath:"TEXT"
-    }
+        if ns == config.DEFAULT_SONG_TABLE:
+            from input.data_mining import attribute_schema
+        #else:
+        #   from input.marsyas import attribute_schema
 
-    if ns == config.DEFAULT_SONG_TABLE:
-        from input.data_mining import attribute_schema
-    #else:
-    #   from input.marsyas import attribute_schema
+        for attribute in attribute_schema:
+            song_def[attribute.name] = attribute.type
 
-    for attribute in attribute_schema:
-        song_def[attribute.name] = attribute.type
-
-    db.installNamespace(ns, song_def)
-    print ns + " namespace created\n"
+        db.installNamespace(ns, song_def)
+        print ns + " namespace created\n"
 
     print "............................\n"
 
