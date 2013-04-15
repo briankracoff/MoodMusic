@@ -161,7 +161,12 @@ class CLI:
             print "Need a playlist or a song."
             sys.exit(1)
         elif song == None:
-            self.song = self.playlist.get_current_song()
+            if self.playlist.has_next_song():
+                self.song = self.playlist.get_current_song()
+            else: 
+                print ("\nThere are no songs in your database associated with that mood\n"
+                       "-- make sure any songs you assigned to that mood are in your database\n")
+                return
         else:
             self.song = song
 
