@@ -40,9 +40,9 @@ Install VLC media player at the following website: http://www.videolan.org/vlc/
 
         easy_install -U pyechonest
 
-####f. Marsyas
+####f. Marsyas (if you'd like to use its feature-generation instead of EchoNest feature-generation).
 
-        See README.marsyas.
+See [README.marsyas](README.marsyas)
 
 ###2. Clone repo (or download as a zip)
 
