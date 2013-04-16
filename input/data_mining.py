@@ -305,6 +305,7 @@ def get_attr(fp, pathstring, db):
     except Exception:
         return
 
+    # all initial values are set to None
     beatsavg = None
     beatsdev = None
     barsavg = None
@@ -354,7 +355,9 @@ def get_attr(fp, pathstring, db):
     thispitchdiff = [None, None, None, None, None, None, None, None, None, None, None, None]
     thispitchratioa = [None, None, None, None, None, None, None, None, None, None, None, None]
     thispitchratiob = [None, None, None, None, None, None, None, None, None, None, None, None]
-    
+
+    # features present in the track information are placed in the corresponding variable holders
+    ## many of these call functions to process the data further
     if hasattr(track, 'beats') and len(track.beats) > 0:
         beatsavg = get_average(track.beats, 'duration')
         beatsdev = get_deviation(track.beats, 'duration', beatsavg)
@@ -412,6 +415,7 @@ def get_attr(fp, pathstring, db):
     if hasattr(track, 'title'):
         thistitle = str(track)
 
+    # segment data (individual notes) are extracted and processed into aggregate values for the track
     if hasattr(track, 'segments') and len(track.segments) != 0:
         loudness_maxarray = []
         loudness_max_timearray = []
@@ -463,7 +467,7 @@ def get_attr(fp, pathstring, db):
             i += 1
         
 
-    
+    # a dictionary is created with all the features present, which can then be read into a DB
     song = { commonPath: pathstring,
              commonTitle: thistitle,
              commonArtist: thisartist,
@@ -602,9 +606,10 @@ def get_attr(fp, pathstring, db):
 
  
     ## calls a function to place these attributes in the DB
-     # instead, should make this call through the DB abstraction layer
     db.add_song(song)
-    
+
+# simple function to get a ratio of values over a certain value present in an array
+# takes an array of values between 0 and 1
 def get_ratio(array, value):
     if not array:
         return None
@@ -613,6 +618,7 @@ def get_ratio(array, value):
 
     return float(count)/float(len(array))
 
+# function to average values in an array
 def get_aver(array):
     if not array:
         return None
@@ -624,7 +630,8 @@ def pairwise(iterable):
     a, b = tee(iterable)
     next(b, None)
     return izip(a, b)
-    
+
+# function to get the average difference between consecutive values in an array 
 def get_differential(array):
     if not array:
         return 0

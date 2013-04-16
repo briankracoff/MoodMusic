@@ -157,8 +157,9 @@ def run(runBackgroundImporter = True):
     while(choice not in ['a', 'b', 'c', 'd']):
         choice = raw_input('Please enter an option above: ')
 
+    
     if choice == 'a':
-
+    
         print "\nHow would you like to select a song?\n"
         print "l -> Search your Library"
         print "f -> Enter a filepath"
@@ -166,12 +167,15 @@ def run(runBackgroundImporter = True):
         selection = raw_input('> ')
         while (selection not in ['l', 'f']):
             selection = raw_input('Please enter an option above: ')
+
+        # searh the user library for a song and return the filepath
         if selection == 'l':
             songFile = song_search(Config().get_attr('MUSIC_LIBRARY_FILE_PATH'))
         elif selection == 'f':
             #User enters a filepath
             songFile = raw_input('Enter song file: ')
 
+        # if a song was found, play it 
         if songFile != None:
             chosenSong = Song.song_from_filepath(songFile)
             application.play_song(chosenSong)
