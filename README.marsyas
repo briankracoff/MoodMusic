@@ -1,0 +1,55 @@
+For local audio analysis, MoodMusic uses a project called marsyas:
+
+http://marsyasweb.appspot.com/
+
+Marsyas allows construction of audio analysis networks. It contains
+a large number of components for doing specific analysis tasks and
+also contains components that can combine other components in various
+ways. Any of these components can be worked on using a common
+interface, so any of them can be used to analyze audio in the same way.
+
+Marsyas is not commonly available as a binary distribution, so in order
+to use it you may need to install it from source. The way I did this
+was to check out the subversion repository:
+
+svn co https://svn.code.sf.net/p/marsyas/code/trunk marsyas
+
+Marsyas uses cmake as its build system, so you will need to install
+that. Once it is installed, enter the "src" subdirectory. Next, run:
+
+cmake ./
+ccmake ./
+
+The second command will open up an interface with which you can
+configure the marsyas build. First of all, set CMAKE_INSTALL_PREFIX
+to your system's normal install prefix. On most systems, this will
+probably be "/usr" rather than the default of "/usr/local".
+
+In order to use moodmusic's marsyas code, you should enable WITH_SWIG
+and WITH_SWIG_PYTHON, which will enable the python bindings. You
+will also probably want to enable some support for compressed audio
+formats. WITH_MAD will give you support for .mp3 files, WITH_VORBIS
+will give you support for Ogg Vorbis files, and WITH_GSTREAMER will
+give you support for everything that GStreamer supports. GStreamer
+should give you the most general support if you don't want to care
+about codecs, but I have not tested it myself.
+
+After you have instructed ccmake to generate the configuration
+(using the 'c' command), exit out of it. cmake will have generated
+another set of build files for your system's native build system.
+On Linux systems, this will be the GNU autotools. To build marsyas,
+run:
+
+make
+
+This will build the source. After that is complete, give yourself
+extra permissions on your system and run:
+
+make install
+
+Now it should be installed and ready to use. To test this, you
+can open up a python prompt and type:
+
+import marsyas
+
+If this succeeds, then you should be good.

@@ -40,6 +40,10 @@ Install VLC media player at the following website: http://www.videolan.org/vlc/
 
         easy_install -U pyechonest
 
+####f. Marsyas
+
+        See README.marsyas.
+
 ###2. Clone repo (or download as a zip)
 
 ###3. Run moodmusic.py
