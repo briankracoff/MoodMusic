@@ -1,7 +1,7 @@
 #! /usr/bin/python
-# Author: Brian Kracoff
 # Runs the main program for MoodMusic
 # Usage: ./moodmusic.py
+# Use -h flag to see optional flags
 
 from ui.cli import *
 from song.song import Song
@@ -75,6 +75,7 @@ def __make_config_file():
 
     print "Config file created\n\n"
  
+# Generates a playlist for a mood and allows the user to save the playlist as a .m3u file
 def choice_c(moods, db):
     print "Choose a mood from the options below:"
     for mood in moods:
@@ -109,18 +110,25 @@ def choice_c(moods, db):
         for song in plist:
             print>>m3u, song
 
-def choice_d(moods, db):
-    print "Enter the song file path you want to add to a mood:"
-    filepath = raw_input("> ")
-    while not db.is_in_db(filepath) and filepath != "n":
-        print "Song not in database. Try again. (or n to quit)"
+# Runs a loop to ask the user to enter filepaths and add them to moods
+def choice_d(db):
+    while(True):
+        moods = DB_Helper().all_moods()
+        print "Enter the song file path you want to add to a mood (or q to quit):"
         filepath = raw_input("> ")
-    if filepath != "n":
-        print "Choose mood to add (or new mood)."
-        for mood in moods:
-            print mood
-        chosenMood = raw_input('> ')
-        db.add_mood(filepath, chosenMood)        
+
+        if filepath == 'q':
+            sys.exit(0)
+
+        while not db.is_in_db(filepath) and filepath != "n":
+            print "Song not in database. Try again. (or n to quit)"
+            filepath = raw_input("> ")
+        if filepath != "n":
+            print "Choose mood to add (or enter a new mood)."
+            for mood in moods:
+                print mood
+            chosenMood = raw_input('> ')
+            db.add_mood(filepath, chosenMood)        
 
 def run(runBackgroundImporter = True):    
     print "****************\nWelcome to MoodMusic!\n****************\n"
@@ -159,7 +167,8 @@ def run(runBackgroundImporter = True):
 
     
     if choice == 'a':
-    
+
+        # User enters a filepath for a song to play
         print "\nHow would you like to select a song?\n"
         print "l -> Search your Library"
         print "f -> Enter a filepath"
@@ -181,7 +190,7 @@ def run(runBackgroundImporter = True):
             application.play_song(chosenSong)
         
     elif choice == 'b':
-        #User enters a mood
+        #User enters a mood to generate a playlist and play
         print "Choose a mood from the options below:"
         for mood in moods:
             print mood
@@ -201,8 +210,9 @@ def run(runBackgroundImporter = True):
     elif choice == 'c':
         choice_c(moods, db)
     elif choice == 'd':
-        choice_d(moods, db)
+        choice_d(db)
 
+# Runs the sandbox test mode for the sandbox DB
 def run_sandbox():
     print "****************\nWelcome to the sandboxed MoodMusic\n****************"
     print "\nYou are using our DB of thousands of songs so that you can test our machine learning algorithms\n"
@@ -245,6 +255,7 @@ def run_sandbox():
             print>>m3u, song
 
 if __name__ == '__main__':
+    #Init argparser
     argparser = argparse.ArgumentParser(prog='MoodMusic', description='A playlist generator in Python')
     argparser.add_argument('-t', '--test', help='Run in the sandbox environment using a test DB', action='store_true')
     argparser.add_argument('--no-import', help="Don't run the background importer during execution", action='store_true')
@@ -252,6 +263,7 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     if args.test:
+        #Run test DB
         config.CHOSEN_DB = config.SANDBOX_DB
         run_sandbox()
 
@@ -259,9 +271,12 @@ if __name__ == '__main__':
         runBackgroundImporter = True
 
         if args.marsyas:
+            #Use Marsyas features
             config.CHOSEN_FEATURE_TABLE = config.MARSYAS_SONG_TABLE
 
         if args.no_import:
+            #Don't run the background importer
             runBackgroundImporter = False
 
+        #Start main program
         run(runBackgroundImporter)
