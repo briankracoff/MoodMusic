@@ -43,6 +43,9 @@ class Playlist:
         if moods == None:
             moods = self._db.all_song_moods()
 
+        if len(moods) == 0 or len(songs) == 0:
+            return [], [], []
+
         songs = np.array(self._prune(songs, Playlist._excludeSongs))
         moods = self._prune(moods, Playlist._excludeMoods)
 
