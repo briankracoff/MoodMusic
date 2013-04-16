@@ -53,6 +53,10 @@ class Playlist:
         return hashes, songs, moods
 
     def _prune(self, stuff, exclude):
+        ''' 
+        take out entries that do not represent data about the
+        songs
+        '''
         newStuff = []
         for row in stuff:
             newRow = [row[commonHash]]
