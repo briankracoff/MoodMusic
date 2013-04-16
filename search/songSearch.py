@@ -5,7 +5,8 @@ import urllib, urlparse
 
 def song_search(MUSIC_FOLDER):
 
-    # Note that these fields are not
+    # Note that these fields are not correlated to actual Artist and Song Title
+    ## They simply take strings and look for them anywhere in a filepath
     print "Enter an Artist:",
     searcha = raw_input()
     searcha = searcha.lower()
@@ -13,6 +14,12 @@ def song_search(MUSIC_FOLDER):
     searchs = raw_input()
     searchs = searchs.lower()
 
+    # the following if and else sections step through the library,
+    ## looking for filepaths that match the search contents
+    ## as each match is found, the user is asked if this is what they were looking for
+    ## if not, they library continues to be searched
+    
+    # if the user library is an xml file, it is parsed here
     if MUSIC_FOLDER.find('.xml') != -1:
         files = []
         with open(MUSIC_FOLDER) as f:
@@ -36,7 +43,8 @@ def song_search(MUSIC_FOLDER):
                             elif answer == 'g':
                                 return fail_recirc(MUSIC_FOLDER)
             return fail_recirc(MUSIC_FOLDER)
-    
+
+    # if not xml, it will be a filepath, and will be parsed here
     else:
         for dirname, dirnames, filenames in os.walk(MUSIC_FOLDER):
             for filename in filenames:
@@ -53,7 +61,9 @@ def song_search(MUSIC_FOLDER):
         return fail_recirc(MUSIC_FOLDER)
     
         
-
+# if a search fails, or is abandoned without finding the desired result,
+## this function gets called
+## the user may then choose to search again or quit
 def fail_recirc(MUSIC_FOLDER):
     print 'Song not found in library'
     print 'Would you like to try again? (y or n)'
