@@ -89,7 +89,7 @@ class Playlist:
     
         mergeCats = [(hashes[j],sum([x[i] for i in moodsIndices])) 
                      for j,x in enumerate(categs) 
-                     if sum([x[i] for i in moodsIndices]) > .5]
+                     if sum([x[i] for i in moodsIndices]) > .7]
         self._to_list([pair[0] for pair in sorted(mergeCats, reverse=True)])
 
     def generate_list_song(self, kernelsong):
@@ -116,17 +116,13 @@ class Playlist:
 
     def _to_list(self, songs):
         '''converts list of hashes to list of filepaths'''
-        files = []
-        for x in songs:
-            files.append(Song.song_from_filepath(self._db.hash_to_file(x)))
             
         # shuffle(files)
-        self._list = files
+        self._list = songs
 
     def _get_mood_list(self, songs, moods):
         ''' 
-        match mood table data to song data (this sucks and should be 
-        improved) 
+        match mood table data to song data 
         '''
         ms = []
         for i,x in enumerate(songs):
@@ -134,13 +130,12 @@ class Playlist:
             for m in moods:
                 if x[0] == m[0]:
                     ms[i] = m[1]
-                    
         return ms
 
     def get_next_song(self):
         ''' return next song in list '''
         self._currentI += 1
-        return self._list[self._currentI]
+        return self.convert_hash_to_song(self._list[self._currentI])
     
     def has_next_song(self):
         ''' ask if the playlist has a next song '''
@@ -148,10 +143,18 @@ class Playlist:
 
     def get_current_song(self):
         ''' return currently playing song '''
-        return self._list[self._currentI]
+        return self.convert_hash_to_song(self._list[self._currentI])
+
+    def convert_hash_to_song(self, has):
+        ''' return a song object associated with the given hash '''
+        return Song.song_from_filepath(self._db.hash_to_file(has))
 
     def get_list(self, length=50):
-        ''' '''
+        ''' return playlist of given length '''
         plist = self._list[:length]
-        shuffle(plist)
-        return plist
+        songs = []
+        for x in plist:
+            songs.append(self.convert_hash_to_song(x))
+
+        shuffle(songs)
+        return songs
